@@ -1,0 +1,32 @@
+{
+  "devtools_port": 9090,
+  "startup_app": {
+    "name": "OpenfinPOC",
+    "description": "OpenFin POC",
+    "url": "http://localhost:1234",
+    "showTaskbarIcon": true,
+    "taskbarIcon": "http://cdn.openfin.co/hyperblotter/favicon.ico",
+    "icon": "http://cdn.openfin.co/hyperblotter/favicon.ico",
+    "uuid": "Openfin react-redux-parcel demo",
+    "autoShow": true,
+    "contextMenu": true,
+    "defaultWidth": 480,
+    "maxWidth": 480,
+    "minWidth": 480,
+    "defaultHeight": 120,
+    "maxHeight": 120,
+    "minHeight": 120,
+    "frame": true,
+    "defaultCentered": true,
+    "resizable": false
+  },
+  "runtime": {
+    "arguments": "",
+    "version": "stable"
+  },
+  "shortcut": {
+    "company": "OpenFin",
+    "description": "Openfin POC",
+    "name": "Openfin POC"
+  }
+}
