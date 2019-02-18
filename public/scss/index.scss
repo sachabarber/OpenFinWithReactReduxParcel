@@ -30,12 +30,12 @@ body, #root, #tileContainer {
     width: 120px;
     max-width: 120px;
     min-width: 120px;
-    height: 120px;  
+    height: 120px;
     max-height: 120px;
     min-height: 120px;
     display: inline-block;
-    background: #4CFF00;
-    margin:5px;
+    background: $background-accent;
+    margin: 5px;
 }
 
 .tileDescription {
@@ -47,14 +47,15 @@ body, #root, #tileContainer {
 
 .tilePair {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 16px;
-    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    color: $body-background;
 }
 
 .tilePrice {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 11px;
-    color: black;
+    color: $body-background;
 }
 
 .tileCommands {
