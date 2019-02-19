@@ -9,31 +9,38 @@ const initialState: TilesInfoState = {
     tileInfos: TileInfo[0],
 };
 
+function fetchTileInfos() {
+    return fetch('/tileInfos').then(x => {
+        return x.json();
+    });
+}
+
+
+export function fetchTilesFromEndpoint() {
+
+    return function (dispatch) {
+        return fetchTileInfos().then(
+            jsonTiles => dispatch(new TileLoadedAction(jsonTiles))
+        );
+    };
+}
+
+
 export function tilesReducer(state: TilesInfoState = initialState, wrapper: ActionWrapper) {
   const action = wrapper.action;
-  if (action instanceof FetchTileInfosAction) {
+    if (action instanceof TileLoadedAction) {
     return {
       ...state,
-      tileInfos:
-        [
-            new TileInfo("USDGBP", 0.78),
-            new TileInfo("USDEUR", 0.89),
-            new TileInfo("USDCAN", 1.32),
-            new TileInfo("USDCHF", 1.01),
-            new TileInfo("GBPCAN", 1.71),
-            new TileInfo("GBPAUD", 1.81),
-            new TileInfo("GBPEUR", 1.14),
-            new TileInfo("GBPPLN", 4.95)
-        ]
+        tileInfos: action.tileInfos
     };
   }
   return state;
 }
 
-class FetchTileInfosAction {
-  type = 'My-App/Fetch-Tile-Infos';
-}
+class TileLoadedAction {
+    type = 'My-App/Tile-Infos-Loaded';
 
-export function fetchTileInfos() {
-    return new FetchTileInfosAction();
+    constructor(public tileInfos: TileInfo[]) {
+
+    }
 }

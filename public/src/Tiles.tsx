@@ -16,14 +16,14 @@ import { Provider } from 'react-redux'
 import { store } from './redux/store';
 import { RootState } from './redux/root';
 import { connect } from 'react-redux';
-import { fetchTileInfos } from './redux/tiles';
+import { fetchTilesFromEndpoint } from './redux/tiles';
 
 interface TilesProps {
     tileInfos: TileInfo[];
 }
 
 interface TilesActions {
-    fetchTileInfos: any;
+    fetchTilesFromEndpoint: any;
 }
 
 interface TilesState { }
@@ -48,7 +48,7 @@ class TilesInner extends React.Component<TilesProps & TilesActions, TilesState> 
     }
 
     componentDidMount() {
-        this.props.fetchTileInfos();
+        this.props.fetchTilesFromEndpoint();
     }
 }
 
@@ -57,7 +57,7 @@ export const Tiles = connect<TilesProps, TilesActions, RootState>(
         tileInfos: state.tiles.tileInfos,
     }),
     {
-        fetchTileInfos: fetchTileInfos,
+        fetchTilesFromEndpoint: fetchTilesFromEndpoint,
     }
 )(TilesInner);
 

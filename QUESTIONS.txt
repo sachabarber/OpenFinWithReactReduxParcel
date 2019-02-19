@@ -1,3 +1,1 @@
 ﻿1. Tooltip on img Title="xxxx" how to do this in react
-2. In Tiles why does my map function not work with custom react Tile component
-3. How to grab the list of stuff from Redux and make a listbof Tile from the state from Redux (ideally want to use Redux Thunk)
