@@ -35,6 +35,7 @@ body, #root, #tileContainer {
     min-height: 120px;
     display: inline-block;
     background: $background-accent;
+    border:2px solid black;
     margin: 5px;
 }
 
@@ -58,13 +59,49 @@ body, #root, #tileContainer {
     color: $body-background;
 }
 
+.tileArrowUp {
+    position: absolute;
+    top: 40px;
+    left: 80px;
+}
+
+.tileArrowDown {
+    position: absolute;
+    top: 65px;
+    left: 80px;
+}
+
+
 .tileCommands {
-    margin: 3px;
+    margin-top: -25px;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-bottom: 3px;
     background-color: $body-background;
-    padding:2px;
+    padding: 2px;
 }
 
 
 .tileImages {
     margin: 5px;
 }
+
+.tileNumbers {
+    position: relative;
+    top: -10px;
+}
+
+.tileLittleNumbers {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:black;
+    font-size:20px;
+}
+
+.tileBigNumbers {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: steelblue;
+    font-size: 40px;
+}
+
+
+

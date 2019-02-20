@@ -10,6 +10,11 @@ import '../scss/index.scss';
 import tickGrayLogo from '../img/tickGray.png';
 import tickColoredLogo from '../img/tickColored.png';
 
+import blackTriangleUpLogo from '../img/BlackTriangleUp.png';
+import greenTriangleUpLogo from '../img/GreenTriangleUp.png';
+import blackTriangleDownLogo from '../img/BlackTriangleDown.png';
+import redTriangleDownLogo from '../img/RedTriangleDown.png';
+
 //components
 import { Button } from 'react-bootstrap';
 import HoverImage from "react-hover-image"
@@ -23,8 +28,10 @@ interface TileProps {
 
 interface TileState {
     tilePriceRaw: number;
-    tilePrice: string;
+    tileFraction: string;
+    tilePriceDigit: string;
     isInitaialised: boolean;
+    isUp: boolean;
 }
 
 
@@ -32,9 +39,11 @@ export class Tile extends React.Component<TileProps, TileState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            tilePrice: "0",
+            tilePriceDigit: "0",
+            tileFraction: "0",
             tilePriceRaw: 0,
-            isInitaialised:false
+            isInitaialised: false,
+            isUp:false
         };
     }
 
@@ -44,8 +53,20 @@ export class Tile extends React.Component<TileProps, TileState> {
                 <div className="card">
                     <div className="tileDescription">
                         <p className="tilePair">{this.props.tilePair}</p>
-                        <p className="tilePrice">{this.state.tilePrice}</p>
-                    </div>
+
+                        <div id="tileNumbers">
+                            <span>
+                                <span className="tileLittleNumbers">{this.state.tilePriceDigit}</span>
+                                <span className="tileLittleNumbers">.</span>
+                                <span className="tileBigNumbers">{this.state.tilePriceFraction}</span>
+                            </span>
+                        </div>
+                        <div className="tileArrowUp">
+                            {this.state.isUp ? <img src={greenTriangleUpLogo} /> : <img src={blackTriangleUpLogo} />}
+                        </div>
+                        <div className="tileArrowDown">
+                            {this.state.isUp ? <img src={blackTriangleDownLogo} /> : <img src={redTriangleDownLogo} />}
+                        </div>                    </div>
                     <div className="tileCommands">
                         <span>
                             <HoverImage className="tileImages"
@@ -89,28 +110,39 @@ export class Tile extends React.Component<TileProps, TileState> {
 
         if (self.state.isInitaialised === true) {
             var isNegativeChance = self.generateRandomNumber(1.0);
-            var fiddleFactor = self.generateRandomNumber(10.0);
+            var fiddleFactor = self.generateRandomNumber(20.0);
             if (isNegativeChance > 0.5) {
                 fiddleFactor = -fiddleFactor;
             }
 
-            var newTilePriceRaw = self.state.tilePriceRaw + fiddleFactor
-            var newTilePrice = self.formatTo2Places(newTilePriceRaw)
+          
+            var newTilePriceRaw = self.state.tilePriceRaw + fiddleFactor;
+            var newIsUp = newTilePriceRaw > self.state.tilePriceRaw;
+
+            var newTilePrice = self.formatTo2Places(newTilePriceRaw);
+            var newTilePriceDigit = newTilePrice.substring(0, newTilePrice.indexOf('.'));
+            var newTilePriceFraction = newTilePrice.substring(newTilePrice.indexOf('.') + 1);
 
             self.setState((state, props) => ({
-                tilePrice: newTilePrice,
+                tilePriceDigit: newTilePriceDigit,
+                tilePriceFraction: newTilePriceFraction,
                 tilePriceRaw: newTilePriceRaw,
+                isUp: newIsUp
             }));            
         }
         else {
 
             var newTilePriceRaw = self.props.tilePrice
             var newTilePrice = self.formatTo2Places(newTilePriceRaw)
+            var newTilePriceDigit = newTilePrice.substring(0, newTilePrice.indexOf('.'));
+            var newTilePriceFraction = newTilePrice.substring(newTilePrice.indexOf('.'));
 
             self.setState((state, props) => ({
-                tilePrice: newTilePrice,
+                tilePriceDigit: newTilePriceDigit,
+                tilePriceFraction: newTilePriceFraction,
                 tilePriceRaw: newTilePriceRaw,
-                isInitaialised:true
+                isInitaialised: true,
+                isUp:true
             }));
         }
     }
