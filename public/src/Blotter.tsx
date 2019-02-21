@@ -9,37 +9,36 @@ import '../scss/index.scss';
 import { Button } from 'react-bootstrap';
 import HoverImage from "react-hover-image"
 import { Tile } from './Tile';
-import { TileInfo } from './common/commonModels';
+import { BlotterInfo } from './common/commonModels';
 
 //Redux
 import { Provider } from 'react-redux'
 import { store } from './redux/store';
 import { RootState } from './redux/root';
 import { connect } from 'react-redux';
-import { fetchTilesFromEndpoint } from './redux/tiles';
+import { fetchBlotterFromEndpoint } from './redux/blotter';
 
 //images
 import loaderLogo from '../img/ajax-loader.gif';
 
-
-interface TilesProps {
-    tileInfos: TileInfo[];
+interface BlotterProps {
+    blotterInfos: BlotterInfo[];
 }
 
-interface TilesActions {
-    fetchTilesFromEndpoint: any;
+interface BlotterActions {
+    fetchBlotterFromEndpoint: any;
 }
 
-interface TilesState { }
+interface BlotterState { }
 
-class TilesInner extends React.Component<TilesProps & TilesActions, TilesState> {
+class BlotterInner extends React.Component<BlotterProps & BlotterActions, BlotterState> {
     constructor(props: any) {
         super(props);
     }
 
     render() {
         return (
-            (this.props.tileInfos === undefined)
+            (this.props.blotterInfos === undefined)
                 ? <div className="Loader">
                     <div className="LoaderImage">
                         <span>
@@ -49,10 +48,10 @@ class TilesInner extends React.Component<TilesProps & TilesActions, TilesState> 
                         </span>
                     </div>
                   </div>
-                : <div id="tileContainer">
-                    <ul id="listOfTiles">
+                : <div>
+                    <ul>
                         {
-                            this.props.tileInfos.map(d => <Tile tilePair={d.tilePair} tilePrice={d.tilePrice} />)
+                            this.props.blotterInfos.map(b => <li>{b.pair}</li>)
                         }
                     </ul>
                 </div>
@@ -60,22 +59,22 @@ class TilesInner extends React.Component<TilesProps & TilesActions, TilesState> 
     }
 
     componentDidMount() {
-        this.props.fetchTilesFromEndpoint();
+        this.props.fetchBlotterFromEndpoint();
     }
 }
 
-export const Tiles = connect<TilesProps, TilesActions, RootState>(
+export const Blotter = connect<BlotterProps, BlotterActions, RootState>(
     state => ({
-        tileInfos: state.tiles.tileInfos,
+        blotterInfos: state.blotter.blotterInfos,
     }),
     {
-        fetchTilesFromEndpoint: fetchTilesFromEndpoint,
+        fetchBlotterFromEndpoint: fetchBlotterFromEndpoint,
     }
-)(TilesInner);
+)(BlotterInner);
 
 
-export const TilesComponent = () => (
+export const BlotterComponent = () => (
     <Provider store={store}>
-        <Tiles />
+        <Blotter />
     </Provider>
 );

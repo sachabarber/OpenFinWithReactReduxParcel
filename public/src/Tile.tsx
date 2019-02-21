@@ -9,7 +9,6 @@ import '../scss/index.scss';
 //images
 import tickGrayLogo from '../img/tickGray.png';
 import tickColoredLogo from '../img/tickColored.png';
-
 import blackTriangleUpLogo from '../img/BlackTriangleUp.png';
 import greenTriangleUpLogo from '../img/GreenTriangleUp.png';
 import blackTriangleDownLogo from '../img/BlackTriangleDown.png';

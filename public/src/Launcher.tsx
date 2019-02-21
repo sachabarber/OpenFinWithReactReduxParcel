@@ -66,7 +66,14 @@ class Launcher extends React.Component<undefined, undefined> {
     }
 
     handleTableClick = async (e) => {
-        alert("table");
+        const win = await fin.Window.create({
+            name: "Blotter",
+            url: "/blotter",
+            defaultWidth: 800,
+            defaultHeight: 200,
+            resizable: true,
+            autoShow: true
+        });
     }
 
     handleChartClick = async (e) => {

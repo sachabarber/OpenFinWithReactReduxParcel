@@ -14,6 +14,10 @@ app.get('/', function (req, res) {
     res.sendFile("public/dist/launcher.html", { "root": __dirname });
 });
 
+app.get('/blotter', function (req, res) {
+    res.sendFile("public/dist/blotter.html", { "root": __dirname });
+});
+
 app.get('/chart', function (req, res) {
     res.sendFile("public/dist/chart.html", { "root": __dirname });
 });
@@ -25,7 +29,6 @@ app.get('/tiles', function (req, res) {
 
 app.get('/tileInfos', function (req, res) {
     res.send(
-
         [
             { "tilePair": "USDGBP", "tilePrice": 0.78 },
             { "tilePair": "USDEUR", "tilePrice": 0.89 },
@@ -36,7 +39,16 @@ app.get('/tileInfos', function (req, res) {
             { "tilePair": "GBPEUR", "tilePrice": 1.14 },
             { "tilePair": "GBPPLN", "tilePrice": 4.95 },
         ]
-        );
+    );
+});
+
+app.get('/blotterInfos', function (req, res) {
+    res.send(
+        [
+            { "pair": "USDGBP", "price": 0.78, "dateCreated": '18/01/19' },
+            { "pair": "USDEUR", "price": 0.89, "dateCreated": '18/01/19' }
+        ]
+    );
 });
 
 

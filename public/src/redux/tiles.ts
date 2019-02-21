@@ -15,7 +15,6 @@ function fetchTileInfos() {
     });
 }
 
-
 export function fetchTilesFromEndpoint() {
 
     return function (dispatch) {
@@ -24,7 +23,6 @@ export function fetchTilesFromEndpoint() {
         );
     };
 }
-
 
 export function tilesReducer(state: TilesInfoState = initialState, wrapper: ActionWrapper) {
   const action = wrapper.action;

@@ -6,3 +6,16 @@
         this.tilePrice = tilePrice;
     }
 }
+
+
+export class BlotterInfo {
+
+    constructor(
+        public pair: string,
+        public price: number,
+        public dateCreated: Date
+    )
+    {
+
+    }
+}

@@ -1,15 +1,14 @@
 import * as redux from 'redux';
-//import { DetailState, detailsReducer } from './details';
 import { TilesInfoState, tilesReducer } from './tiles';
-
+import { BlotterInfoState, blotterReducer } from './blotter';
 
 
 export interface RootState {
-    //details: DetailState;
     tiles: TilesInfoState;
+    blotter: BlotterInfoState;
 }
 
 export const rootReducer = redux.combineReducers({
-    //details: detailsReducer,
     tiles: tilesReducer,
+    blotter: blotterReducer,
 });

@@ -44,6 +44,7 @@ body, #root, #tileContainer {
     top: 0;
     margin-left: 5px;
     padding-bottom: 2em;
+    height:80px;
 }
 
 .tilePair {
@@ -73,12 +74,14 @@ body, #root, #tileContainer {
 
 
 .tileCommands {
-    margin-top: -25px;
+    top: 110px;
+    margin-top:10px;
     margin-left: 3px;
     margin-right: 3px;
     margin-bottom: 3px;
-    background-color: $body-background;
+    background-color: lightgray;
     padding: 2px;
+    width: 110px;
 }
 
 
@@ -101,6 +104,19 @@ body, #root, #tileContainer {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: steelblue;
     font-size: 40px;
+}
+
+.Loader {
+    text-align: center
+}
+
+.LoaderImage {
+    display: inline-block;
+    margin-top:10px;
+}
+
+.Text {
+    color: $standard-accent-text-color;
 }
 
 
