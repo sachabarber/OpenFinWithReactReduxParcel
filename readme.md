@@ -15,3 +15,8 @@ Please follow the instruction below to build/run this code
 - **npm run express-server** then navigate to http://localhost:1234 OR **node server** then navigate to http://localhost:1234
 
 
+## TODO
+1. Row selection on blotter
+1. Bus from tile to blotter, change blotter to merge props to state, and accept new state from tile/bus
+1. Graph from blotter/tile
+1. docking windows

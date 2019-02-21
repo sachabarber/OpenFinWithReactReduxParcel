@@ -1,109 +1,19 @@
 ﻿@import './variables.scss';
-
+@import './launcher.scss';
+@import './blotter.scss';
+@import './tiles.scss';
 
 body, #root, #tileContainer {
     background-color: $body-background;
     font-size: 12px;
 }
 
-#launcher {
-    max-width: 450px;
-    width: 450px;
-    max-height: 80px;
-    height: 80px;
+select {
+    color: black !important;
 }
 
-#launcherDiv > img {
-    margin-left: 30px;
-    margin-right: 30px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    top: 10px;
-}
-
-#listOfTiles {
-    list-style-type: none;
-}
-
-
-#listOfTiles li {
-    width: 120px;
-    max-width: 120px;
-    min-width: 120px;
-    height: 120px;
-    max-height: 120px;
-    min-height: 120px;
-    display: inline-block;
-    background: $background-accent;
-    border:2px solid black;
-    margin: 5px;
-}
-
-.tileDescription {
-    position: relative;
-    top: 0;
-    margin-left: 5px;
-    padding-bottom: 2em;
-    height:80px;
-}
-
-.tilePair {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 18px;
-    font-weight: bold;
-    color: $body-background;
-}
-
-.tilePrice {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 11px;
-    color: $body-background;
-}
-
-.tileArrowUp {
-    position: absolute;
-    top: 40px;
-    left: 80px;
-}
-
-.tileArrowDown {
-    position: absolute;
-    top: 65px;
-    left: 80px;
-}
-
-
-.tileCommands {
-    top: 110px;
-    margin-top:10px;
-    margin-left: 3px;
-    margin-right: 3px;
-    margin-bottom: 3px;
-    background-color: lightgray;
-    padding: 2px;
-    width: 110px;
-}
-
-
-.tileImages {
-    margin: 5px;
-}
-
-.tileNumbers {
-    position: relative;
-    top: -10px;
-}
-
-.tileLittleNumbers {
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color:black;
-    font-size:20px;
-}
-
-.tileBigNumbers {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: steelblue;
-    font-size: 40px;
+input[type='text'] {
+    color: black;
 }
 
 .Loader {
@@ -112,12 +22,9 @@ body, #root, #tileContainer {
 
 .LoaderImage {
     display: inline-block;
-    margin-top:10px;
+    margin-top: 10px;
 }
 
 .Text {
     color: $standard-accent-text-color;
 }
-
-
-

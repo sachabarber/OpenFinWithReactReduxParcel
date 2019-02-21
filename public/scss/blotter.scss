@@ -1,0 +1,46 @@
+﻿@import './variables.scss';
+
+.ReactTable {
+    color: $body-background;
+    color: white;
+    
+}
+
+.rt-table {
+    height: calc(100% - 60px);
+    /* Firefox */
+    height: -moz-calc(100% - 60px);
+    /* WebKit */
+    height: -webkit-calc(100% - 60px);
+    /* Opera */
+    height: -o-calc(100% - 60px);
+    /* Standard */
+    height: calc(100% - 60px);
+}
+
+.rt-tbody {
+    justify-content: flex-start;
+    flex: 1 1 auto;
+    position: relative; /* need this to position inner content */
+    overflow-y: auto;
+}
+
+.rt-tr-group {
+    min-height: 25px
+}
+
+.rt-thead {
+    flex: 0 0 auto;
+}
+
+.-pagination {
+    min-height: 20px
+}
+
+.overflow-hidden {
+    overflow:hidden;
+}
+
+.pagination-bottom {
+    height: 60px;
+}

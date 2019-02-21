@@ -1,9 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import ReactTable from "react-table";
+
 
 //scss
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../scss/index.scss';
+import 'react-table/react-table.css'
 
 //components
 import { Button } from 'react-bootstrap';
@@ -37,6 +40,25 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
     }
 
     render() {
+
+        const columns = [
+            {
+                Header: 'Pair',
+                accessor: 'pair' 
+            },
+            {
+                Header: 'Price',
+                accessor: 'price'
+            },
+            {
+                Header: 'Date Created',
+                accessor: 'dateCreated'
+            }
+        ]
+
+
+
+
         return (
             (this.props.blotterInfos === undefined)
                 ? <div className="Loader">
@@ -47,14 +69,12 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
                             <span className="Text">Loading</span>
                         </span>
                     </div>
-                  </div>
-                : <div>
-                    <ul>
-                        {
-                            this.props.blotterInfos.map(b => <li>{b.pair}</li>)
-                        }
-                    </ul>
                 </div>
+                :
+                <ReactTable
+                    className="-striped"
+                    data={this.props.blotterInfos}
+                    columns={columns}/>
         );
     }
 
