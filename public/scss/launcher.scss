@@ -1,14 +1,6 @@
 ﻿@import './variables.scss';
 @import './blotter.scss';
 
-
-body, #root, #tileContainer {
-    background-color: $body-background;
-    font-size: 12px;
-}
-
-
-
 #launcher {
     max-width: 450px;
     width: 450px;

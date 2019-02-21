@@ -55,10 +55,6 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
                 accessor: 'dateCreated'
             }
         ]
-
-
-
-
         return (
             (this.props.blotterInfos === undefined)
                 ? <div className="Loader">
@@ -74,12 +70,31 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
                 <ReactTable
                     className="-striped"
                     data={this.props.blotterInfos}
-                    columns={columns}/>
+                    columns={columns}
+                    getTrProps={(state, rowInfo, column, instance) => {
+                        return {
+                            onClick: () => {
+                                this.handleRowClick(rowInfo, instance)
+                            },
+                            className: (this.isSelected(rowInfo)) ? "SelectedRow" : ""
+                        }
+                    }}
+                />
         );
     }
 
     componentDidMount() {
         this.props.fetchBlotterFromEndpoint();
+    }
+
+    handleRowClick = (rowInfo, instance) => {
+        console.log('rowInfo=', rowInfo);
+        console.log('instance=', instance);
+        alert(rowInfo.row.pair);
+    }
+
+    isSelected = (rowInfo) => {
+        return false;
     }
 }
 

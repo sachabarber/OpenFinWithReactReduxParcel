@@ -91,8 +91,10 @@ class Launcher extends React.Component<undefined, undefined> {
         const win = await fin.Window.create({
             name: "Tiles",
             url: "/tiles",
-            defaultWidth: 600,
-            defaultHeight: 400,
+            defaultWidth: 500,
+            defaultHeight: 290,
+            height: 290,
+            width:500
             resizable: false,
             autoShow: true
         });
