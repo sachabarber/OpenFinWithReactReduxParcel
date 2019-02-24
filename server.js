@@ -45,8 +45,8 @@ app.get('/tileInfos', function (req, res) {
 app.get('/blotterInfos', function (req, res) {
     res.send(
         [
-            { "pair": "USDGBP", "price": 0.78, "dateCreated": '18/01/19' },
-            { "pair": "USDEUR", "price": 0.89, "dateCreated": '18/01/19' }
+            { "pair": "USDGBP", "price": 0.78, "dateCreated": formatDate(Date.now()) },
+            { "pair": "USDEUR", "price": 0.89, "dateCreated": formatDate(Date.now()) }
         ]
     );
 });
@@ -70,3 +70,34 @@ const localServer = http.createServer(app).listen(port, function(){
 
 
 });
+
+Number.prototype.padLeft = function (base, chr) {
+    var len = (String(base || 10).length - String(this).length) + 1;
+    return len > 0 ? new Array(len).join(chr || '0') + this : this;
+}
+
+function formatDate(date) {
+    //var d = new Date(date),
+    //    month = '' + (d.getMonth() + 1),
+    //    day = '' + d.getDate(),
+    //    year = d.getFullYear();
+
+    //if (month.length < 2) month = '0' + month;
+    //if (day.length < 2) day = '0' + day;
+
+    //return [year, month, day].join('-');
+
+
+    var d = new Date(date);
+    return [(d.getMonth() + 1).padLeft(),
+    d.getDate().padLeft(),
+    d.getFullYear()].join('/') + ' ' +
+        [d.getHours().padLeft(),
+        d.getMinutes().padLeft(),
+        d.getSeconds().padLeft()].join(':');
+
+
+}
+
+
+

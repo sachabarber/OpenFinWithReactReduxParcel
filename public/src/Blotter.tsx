@@ -32,11 +32,17 @@ interface BlotterActions {
     fetchBlotterFromEndpoint: any;
 }
 
-interface BlotterState { }
+interface BlotterState {
+    selectedRow: number;
+}
 
 class BlotterInner extends React.Component<BlotterProps & BlotterActions, BlotterState> {
     constructor(props: any) {
         super(props);
+
+        this.setState({
+            selectedRow: -1
+        })
     }
 
     render() {
@@ -68,17 +74,36 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
                 </div>
                 :
                 <ReactTable
-                    className="-striped"
                     data={this.props.blotterInfos}
                     columns={columns}
                     getTrProps={(state, rowInfo, column, instance) => {
-                        return {
-                            onClick: () => {
-                                this.handleRowClick(rowInfo, instance)
-                            },
-                            className: (this.isSelected(rowInfo)) ? "SelectedRow" : ""
+                        if (typeof rowInfo !== "undefined") {
+                            return {
+                                onClick: (e, handleOriginal) => {
+                                    this.setState({
+                                        selectedRow: rowInfo.index
+                                    });
+                                    this.handleRowClick(rowInfo, instance,"if")
+                                },
+                                style: {
+                                    background: this.checkRowIsSelected(rowInfo) ? 'cornflowerblue' : '#2c2c2c',
+                                    color: this.checkRowIsSelected(rowInfo) ? 'black' : 'white'
+                                },
+                            }
+                        }
+                        else {
+                            return {
+                                onClick: (e, handleOriginal) => {
+                                    this.handleRowClick(rowInfo, instance, "else")
+                                },
+                                style: {
+                                    background: '#2c2c2c',
+                                    color: 'white'
+                                },
+                            }
                         }
                     }}
+
                 />
         );
     }
@@ -87,10 +112,21 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
         this.props.fetchBlotterFromEndpoint();
     }
 
-    handleRowClick = (rowInfo, instance) => {
-        console.log('rowInfo=', rowInfo);
-        console.log('instance=', instance);
-        alert(rowInfo.row.pair);
+    checkRowIsSelected = (rowInfo) => {
+        var result = false;
+        if (typeof rowInfo !== "undefined" && typeof this.state !== "undefined" && this.state != null) {
+            result= rowInfo.index === this.state.selectedRow ? true : false;
+        }
+        console.log("result", result);
+        return result;
+    }
+
+    handleRowClick = (rowInfo, instance, fromwhere) => {
+        if (typeof rowInfo !== "undefined") {
+            console.log('rowInfo=', rowInfo);
+            console.log('instance=', instance);
+            alert(rowInfo.row.pair);
+        }
     }
 
     isSelected = (rowInfo) => {

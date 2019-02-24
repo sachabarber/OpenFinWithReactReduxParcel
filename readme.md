@@ -16,7 +16,7 @@ Please follow the instruction below to build/run this code
 
 
 ## TODO
-1. Row selection on blotter
 1. Bus from tile to blotter, change blotter to merge props to state, and accept new state from tile/bus
-1. Graph from blotter/tile
-1. docking windows
+1. Graph window using query string for the pair
+1. Bus for graph from blotter/tile
+1. layout service to support persisting/restore windows
