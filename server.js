@@ -1,4 +1,26 @@
-var   express = require('express')
+function formatDate(date) {
+    var d = new Date(date);
+    return [(d.getMonth() + 1).padLeft(),
+    d.getDate().padLeft(),
+    d.getFullYear()].join('/') + ' ' +
+        [d.getHours().padLeft(),
+        d.getMinutes().padLeft(),
+        d.getSeconds().padLeft()].join(':');
+}
+
+function createGuid() {
+
+    var r = (new Date()).getTime().toString(16) + Math.random().toString(16).substring(2) + "0".repeat(16);
+    return r.substr(0, 8) + '-' + r.substr(8, 4) + '-4000-8' + r.substr(12, 3) + '-' + r.substr(15, 12);
+}
+
+Number.prototype.padLeft = function (base, chr) {
+    var len = (String(base || 10).length - String(this).length) + 1;
+    return len > 0 ? new Array(len).join(chr || '0') + this : this;
+}
+
+
+var express = require('express')
     , http = require('http')
     , path = require('path')
     , openfinLauncher = require('openfin-launcher');
@@ -45,8 +67,8 @@ app.get('/tileInfos', function (req, res) {
 app.get('/blotterInfos', function (req, res) {
     res.send(
         [
-            { "pair": "USDGBP", "price": 0.78, "dateCreated": formatDate(Date.now()) },
-            { "pair": "USDEUR", "price": 0.89, "dateCreated": formatDate(Date.now()) }
+            { "pair": "USDGBP", "price": 0.78, "dateCreated": formatDate(Date.now()), "internalId": createGuid() },
+            { "pair": "USDEUR", "price": 0.89, "dateCreated": formatDate(Date.now()), "internalId": createGuid() }
         ]
     );
 });
@@ -71,33 +93,6 @@ const localServer = http.createServer(app).listen(port, function(){
 
 });
 
-Number.prototype.padLeft = function (base, chr) {
-    var len = (String(base || 10).length - String(this).length) + 1;
-    return len > 0 ? new Array(len).join(chr || '0') + this : this;
-}
-
-function formatDate(date) {
-    //var d = new Date(date),
-    //    month = '' + (d.getMonth() + 1),
-    //    day = '' + d.getDate(),
-    //    year = d.getFullYear();
-
-    //if (month.length < 2) month = '0' + month;
-    //if (day.length < 2) day = '0' + day;
-
-    //return [year, month, day].join('-');
-
-
-    var d = new Date(date);
-    return [(d.getMonth() + 1).padLeft(),
-    d.getDate().padLeft(),
-    d.getFullYear()].join('/') + ' ' +
-        [d.getHours().padLeft(),
-        d.getMinutes().padLeft(),
-        d.getSeconds().padLeft()].join(':');
-
-
-}
 
 
 

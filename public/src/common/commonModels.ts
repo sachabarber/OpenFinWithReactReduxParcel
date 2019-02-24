@@ -1,9 +1,9 @@
 ﻿export class TileInfo {
-    tilePair: string;
-    tilePrice: number;
-    constructor(tilePair: string, tilePrice: number) {
-        this.tilePair = tilePair;
-        this.tilePrice = tilePrice;
+    constructor(
+        public tilePair: string,
+        public tilePrice: number)
+    {
+
     }
 }
 
@@ -11,10 +11,10 @@
 export class BlotterInfo {
 
     constructor(
+        public internalId: string,
         public pair: string,
         public price: number,
-        public dateCreated: Date
-    )
+        public dateCreated: Date)
     {
 
     }

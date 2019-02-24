@@ -18,6 +18,7 @@ import redTriangleDownLogo from '../img/RedTriangleDown.png';
 import { Button } from 'react-bootstrap';
 import HoverImage from "react-hover-image"
 import { TileInfo } from './common/commonModels';
+import { formatTo2Places } from './common/commonFunctions';
 
 interface TileProps {
     tilePair: string;
@@ -88,17 +89,19 @@ export class Tile extends React.Component<TileProps, TileState> {
     }
 
     handleTilePlaceTradeClick = async (e) => {
-        alert("TODO : placing trade, will send on bus to grid window");
+        this.publishMessage();
+    }
+
+    publishMessage = () => {
+        fin.desktop.InterApplicationBus.publish("create-deal-from-tile", {
+            pair: this.props.tilePair,
+            price: this.state.tilePriceRaw
+        });
     }
 
     generateRandomNumber = (divisor) => {
         var self = this;
         return Math.random() / divisor
-    }
-
-    formatTo2Places = (theNum: number) => {
-        var result: number = Math.round(theNum * 100) / 100
-        return parseFloat(result.toString(10)).toFixed(2);
     }
 
     randomlyJiggleState = () => {
@@ -113,7 +116,6 @@ export class Tile extends React.Component<TileProps, TileState> {
             if (isNegativeChance > 0.5) {
                 fiddleFactor = -fiddleFactor;
             }
-
           
             var newTilePriceRaw = self.state.tilePriceRaw + fiddleFactor;
             var newIsUp = newTilePriceRaw > self.state.tilePriceRaw;
