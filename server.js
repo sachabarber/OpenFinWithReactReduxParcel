@@ -14,6 +14,11 @@ function createGuid() {
     return r.substr(0, 8) + '-' + r.substr(8, 4) + '-4000-8' + r.substr(12, 3) + '-' + r.substr(15, 12);
 }
 
+function formatTo2Places(theNum) {
+    var result = Math.round(theNum * 100) / 100
+    return parseFloat(result.toString(10)).toFixed(2);
+}
+
 Number.prototype.padLeft = function (base, chr) {
     var len = (String(base || 10).length - String(this).length) + 1;
     return len > 0 ? new Array(len).join(chr || '0') + this : this;
@@ -50,7 +55,7 @@ app.get('/blotter', function (req, res) {
 });
 
 app.post('/trade', function (req, res) {
-    blotterData.push({ "pair": req.body.pair, "price": req.body.price, "dateCreated": formatDate(Date.now()), "internalId": createGuid() });
+    blotterData.push({ "pair": req.body.pair, "price": formatTo2Places(req.body.price), "dateCreated": formatDate(Date.now()), "internalId": createGuid() });
     res.sendStatus(200);
 });
 
@@ -80,12 +85,7 @@ app.get('/tileInfos', function (req, res) {
 });
 
 app.get('/blotterInfos', function (req, res) {
-    res.send(
-        [
-            { "pair": "USDGBP", "price": 0.78, "dateCreated": formatDate(Date.now()), "internalId": createGuid() },
-            { "pair": "USDEUR", "price": 0.89, "dateCreated": formatDate(Date.now()), "internalId": createGuid() }
-        ]
-    );
+    res.send(blotterData);
 });
 
 

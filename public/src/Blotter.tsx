@@ -178,17 +178,12 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
 
     initInterApp = () => {
         self = this;
-        console.log("Init with interapp called");
-        fin.desktop.InterApplicationBus.addSubscribeListener(function (uuid, topic) {
-            console.log("The application " + uuid + " has subscribed to " + topic);
-        });
+        //fin.desktop.InterApplicationBus.addSubscribeListener(function (uuid, topic) {
+        //    console.log("The application " + uuid + " has subscribed to " + topic);
+        //});
 
         fin.desktop.InterApplicationBus.subscribe("*","created-trade-from-tile",
             function (message, uuid) {
-                var _message = "The application " + uuid + " sent this message " + message;
-                console.log("saw message", message);
-                alert("saw message on bus");
-
                 self.props.fetchBlotterFromEndpoint();
             });
     };
