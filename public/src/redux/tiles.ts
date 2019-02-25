@@ -3,10 +3,12 @@ import { TileInfo } from '../common/commonModels';
 
 export interface TilesInfoState {
     tileInfos: TileInfo[];
+    tileLoadingError: boolean;
 }
 
 const initialState: TilesInfoState = {
     tileInfos: TileInfo[0],
+    tileLoadingError: false
 };
 
 function fetchTileInfos() {
@@ -18,20 +20,33 @@ function fetchTileInfos() {
 export function fetchTilesFromEndpoint() {
 
     return function (dispatch) {
-        return fetchTileInfos().then(
-            jsonTiles => dispatch(new TileLoadedAction(jsonTiles))
-        );
+        return fetchTileInfos()
+            .then(
+                jsonTiles => dispatch(new TileLoadedAction(jsonTiles)),
+                reason => dispatch(new TileLoadingErrorAction()
+            ));
     };
 }
 
 export function tilesReducer(state: TilesInfoState = initialState, wrapper: ActionWrapper) {
   const action = wrapper.action;
-    if (action instanceof TileLoadedAction) {
+
+  if (action instanceof TileLoadedAction) {
+      return {
+          ...state,
+          tileInfos: action.tileInfos,
+          wasError: false
+      }
+  }
+
+  if (action instanceof TileLoadingErrorAction) {
     return {
-      ...state,
-        tileInfos: action.tileInfos
+        ...state,
+        tileInfos: new Array<TileInfo>(),
+        tileLoadingError: true
     };
   }
+
   return state;
 }
 
@@ -39,6 +54,15 @@ class TileLoadedAction {
     type = 'My-App/Tile-Infos-Loaded';
 
     constructor(public tileInfos: TileInfo[]) {
+
+    }
+}
+
+
+class TileLoadingErrorAction {
+    type = 'My-App/Tile-Infos-Loading-Error';
+
+    constructor() {
 
     }
 }

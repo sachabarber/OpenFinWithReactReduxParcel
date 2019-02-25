@@ -24,6 +24,7 @@ import loaderLogo from '../img/ajax-loader.gif';
 
 interface TilesProps {
     tileInfos: TileInfo[];
+    tileLoadingError: Boolean
 }
 
 interface TilesActions {
@@ -62,11 +63,39 @@ class TilesInner extends React.Component<TilesProps & TilesActions, TilesState> 
     componentDidMount() {
         this.props.fetchTilesFromEndpoint();
     }
+
+    //static getDerivedStateFromProps(nextProps, prevState) {
+    //    if (nextProps.blotterInfos !== prevState.blotterInfos) {
+    //        return { someState: nextProps.blotterInfos };
+    //    }
+    //    else return null;
+    //}
+
+    //componentDidUpdate(prevProps, prevState) {
+    //    if (prevProps.blotterInfos !== this.props.blotterInfos) {
+    //        //Perform some operation here
+    //        this.setState({
+    //            ...this.state,
+    //            blotterInfos: this.props.blotterInfos
+    //        })
+
+    //    }
+    //}
+
+
+    //NOTE : This method will be deprecated in near future should use above methods
+    componentWillReceiveProps = (nextProps) => {
+        var wasTileLoadingError = nextProps.tileLoadingError;
+        if (wasTileLoadingError) {
+            alert("Could not load tiles");
+        }
+    }
 }
 
 export const Tiles = connect<TilesProps, TilesActions, RootState>(
     state => ({
         tileInfos: state.tiles.tileInfos,
+        tileLoadingError: state.tiles.tileLoadingError
     }),
     {
         fetchTilesFromEndpoint: fetchTilesFromEndpoint,

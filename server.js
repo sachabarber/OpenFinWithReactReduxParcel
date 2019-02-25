@@ -19,14 +19,22 @@ Number.prototype.padLeft = function (base, chr) {
     return len > 0 ? new Array(len).join(chr || '0') + this : this;
 }
 
+var blotterData = [
+    { "pair": "USDGBP", "price": 0.78, "dateCreated": formatDate(Date.now()), "internalId": createGuid() },
+    { "pair": "USDEUR", "price": 0.89, "dateCreated": formatDate(Date.now()), "internalId": createGuid() }
+];
 
 var express = require('express')
     , http = require('http')
     , path = require('path')
-    , openfinLauncher = require('openfin-launcher');
+    , openfinLauncher = require('openfin-launcher')
+    , bodyParser = require("body-parser");
 
 
 var app = express();
+//Here we are configuring express to use body-parser as middle-ware.
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.set('title','Express Parcel app');
 app.use(express.static(path.join(__dirname, 'public/dist')));
@@ -36,9 +44,16 @@ app.get('/', function (req, res) {
     res.sendFile("public/dist/launcher.html", { "root": __dirname });
 });
 
+
 app.get('/blotter', function (req, res) {
     res.sendFile("public/dist/blotter.html", { "root": __dirname });
 });
+
+app.post('/trade', function (req, res) {
+    blotterData.push({ "pair": req.body.pair, "price": req.body.price, "dateCreated": formatDate(Date.now()), "internalId": createGuid() });
+    res.sendStatus(200);
+});
+
 
 app.get('/chart', function (req, res) {
     res.sendFile("public/dist/chart.html", { "root": __dirname });

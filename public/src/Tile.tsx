@@ -82,7 +82,6 @@ export class Tile extends React.Component<TileProps, TileState> {
 
     componentDidMount() {
         interval(500).subscribe(x => {
-            console.log('Next: ', x);
             this.randomlyJiggleState();
         });
         this.randomlyJiggleState();
@@ -93,10 +92,32 @@ export class Tile extends React.Component<TileProps, TileState> {
     }
 
     publishMessage = () => {
-        fin.desktop.InterApplicationBus.publish("create-deal-from-tile", {
-            pair: this.props.tilePair,
-            price: this.state.tilePriceRaw
-        });
+
+        fetch('/trade', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                pair: this.props.tilePair,
+                price: this.state.tilePriceRaw
+            })
+        })
+        .then(
+            status => {
+                fin.desktop.InterApplicationBus.publish("created-trade-from-tile", {
+                    pair: this.props.tilePair,
+                    price: this.state.tilePriceRaw
+                });
+            },
+            reason => {
+                alert('something went wrong while saving trade');
+            }
+        ));
+
+
+      
     }
 
     generateRandomNumber = (divisor) => {
@@ -120,7 +141,7 @@ export class Tile extends React.Component<TileProps, TileState> {
             var newTilePriceRaw = self.state.tilePriceRaw + fiddleFactor;
             var newIsUp = newTilePriceRaw > self.state.tilePriceRaw;
 
-            var newTilePrice = self.formatTo2Places(newTilePriceRaw);
+            var newTilePrice = formatTo2Places(newTilePriceRaw);
             var newTilePriceDigit = newTilePrice.substring(0, newTilePrice.indexOf('.'));
             var newTilePriceFraction = newTilePrice.substring(newTilePrice.indexOf('.') + 1);
 
@@ -134,7 +155,7 @@ export class Tile extends React.Component<TileProps, TileState> {
         else {
 
             var newTilePriceRaw = self.props.tilePrice
-            var newTilePrice = self.formatTo2Places(newTilePriceRaw)
+            var newTilePrice = formatTo2Places(newTilePriceRaw)
             var newTilePriceDigit = newTilePrice.substring(0, newTilePrice.indexOf('.'));
             var newTilePriceFraction = newTilePrice.substring(newTilePrice.indexOf('.'));
 

@@ -35,7 +35,6 @@ interface BlotterActions {
 
 interface BlotterState {
     selectedRow: number;
-    blotterInfos: BlotterInfo[];
 }
 
 Number.prototype.padLeft = function (base, chr) {
@@ -93,8 +92,8 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
             }
         ]
         return (
-            (typeof this.state === "undefined" || this.state === null
-                || typeof this.state.blotterInfos === "undefined" || this.state.blotterInfos === null))
+            (typeof this.props === "undefined" || this.props === null
+                || typeof this.props.blotterInfos === "undefined" || this.props.blotterInfos === null))
                 ? <div className="Loader">
                     <div className="LoaderImage">
                         <span>
@@ -106,7 +105,7 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
                 </div>
                 :
                 <ReactTable
-                    data={this.state.blotterInfos}
+                    data={this.props.blotterInfos}
                     columns={columns}
                     getTrProps={(state, rowInfo, column, instance) => {
                         if (typeof rowInfo !== "undefined") {
@@ -141,44 +140,11 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
         );
     }
 
-    //static getDerivedStateFromProps(nextProps, prevState) {
-    //    if (nextProps.blotterInfos !== prevState.blotterInfos) {
-    //        return { someState: nextProps.blotterInfos };
-    //    }
-    //    else return null;
-    //}
 
-    //componentDidUpdate(prevProps, prevState) {
-    //    if (prevProps.blotterInfos !== this.props.blotterInfos) {
-    //        //Perform some operation here
-    //        this.setState({
-    //            ...this.state,
-    //            blotterInfos: this.props.blotterInfos
-    //        })
-
-    //    }
-    //}
-
-
-    //NOTE : This method will be deprecated in near future should use above methods
-    componentWillReceiveProps = (nextProps) => {
-        console.log("componentWillReceiveProps state", this.state);
-        console.log("new props", nextProps.blotterInfos);
-        var newItemsFromProps = nextProps.blotterInfos;
-        this.setState({
-            blotterInfos: nextProps.blotterInfos
-        })
-    }
 
     componentDidMount = () => {
         this.props.fetchBlotterFromEndpoint();
         this.initInterApp();
-        this.setState({
-            selectedRow: -1,
-            blotterInfos: new Array<BlotterInfo>()
-        })
-        console.log("componentDidMount state", this.state);
-
     }
 
     checkRowIsSelected = (rowInfo) => {
@@ -211,43 +177,23 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
 
 
     initInterApp = () => {
-        this.props
         self = this;
-
         console.log("Init with interapp called");
         fin.desktop.InterApplicationBus.addSubscribeListener(function (uuid, topic) {
             console.log("The application " + uuid + " has subscribed to " + topic);
         });
 
-        fin.desktop.InterApplicationBus.subscribe("*","create-deal-from-tile",
+        fin.desktop.InterApplicationBus.subscribe("*","created-trade-from-tile",
             function (message, uuid) {
                 var _message = "The application " + uuid + " sent this message " + message;
-                console.log(_message.pair);
-                var messagePair = message.pair;
-                var messagePrice = formatTo2Places(message.price);
-                var newBlotterInfo = new BlotterInfo(self.createGuid(), messagePair, messagePrice, self.formatDate(Date.now()));
-                self.setState({
-                    blotterInfos: [...self.state.blotterInfos, newBlotterInfo]
-                })
+                console.log("saw message", message);
+                alert("saw message on bus");
+
+                self.props.fetchBlotterFromEndpoint();
             });
     };
 
-
-    formatDate = (date) => {
-        var d = new Date(date);
-        return [(d.getMonth() + 1).padLeft(),
-        d.getDate().padLeft(),
-        d.getFullYear()].join('/') + ' ' +
-            [d.getHours().padLeft(),
-            d.getMinutes().padLeft(),
-            d.getSeconds().padLeft()].join(':');
-    }
-
-    createGuid = () => {
-
-        var r = (new Date()).getTime().toString(16) + Math.random().toString(16).substring(2) + "0".repeat(16);
-        return r.substr(0, 8) + '-' + r.substr(8, 4) + '-4000-8' + r.substr(12, 3) + '-' + r.substr(15, 12);
-    }
+    
 }
 
 export const Blotter = connect<BlotterProps, BlotterActions, RootState>(
@@ -262,6 +208,6 @@ export const Blotter = connect<BlotterProps, BlotterActions, RootState>(
 
 export const BlotterComponent = () => (
     <Provider store={store}>
-        <Blotter />
+        <Blotter/>
     </Provider>
 );
