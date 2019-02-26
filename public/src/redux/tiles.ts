@@ -35,7 +35,7 @@ export function tilesReducer(state: TilesInfoState = initialState, wrapper: Acti
       return {
           ...state,
           tileInfos: action.tileInfos,
-          wasError: false
+          tileLoadingError: false
       }
   }
 
