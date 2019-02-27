@@ -19,36 +19,41 @@ import { fetchChartDataFromWeb } from './redux/chart';
 import loaderLogo from '../img/ajax-loader.gif';
 
 //chart
-interface CryptoChartProps {
-    data: any;
-}
+import { FixedWidthChart } from './CryptoChart';
 
-class CryptoChart extends React.Component<CryptoChartProps, undefined> {
-    constructor(props: any) {
-        super(props);
-    }
+import { getData } from "./utils/ChartUtils"
 
-    render() {
-        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
+////chart
+//interface CryptoChartProps {
+//    data: any;
+//}
 
-        //good CSV data here when needed : https://www.cryptodatadownload.com/
-        //good CSV data here when needed : https://www.cryptodatadownload.com/
-        //good CSV data here when needed : https://www.cryptodatadownload.com/
-        //good CSV data here when needed : https://www.cryptodatadownload.com/
+//class CryptoChart extends React.Component<CryptoChartProps, undefined> {
+//    constructor(props: any) {
+//        super(props);
+//    }
+
+//    render() {
+//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
+//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
+//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
+//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
+//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
+//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
+
+//        //good CSV data here when needed : https://www.cryptodatadownload.com/
+//        //good CSV data here when needed : https://www.cryptodatadownload.com/
+//        //good CSV data here when needed : https://www.cryptodatadownload.com/
+//        //good CSV data here when needed : https://www.cryptodatadownload.com/
 
 
 
-        return <div>
-            <h1>THE CHART IS LOADED</h1>
-            <h2>{this.props.data.length}</h2>
-        </div>
-    }
-}
+//        return <div>
+//            <h1>THE CHART IS LOADED</h1>
+//            <h2>{this.props.data.length}</h2>
+//        </div>
+//    }
+//}
 
 
 
@@ -63,31 +68,47 @@ interface  ChartActions {
 }
 
 
-export class ChartInner extends React.Component<ChartProps & ChartActions, undefined> {
+interface ChartState {
+    data: any;
+}
+
+//export class ChartInner extends React.Component<ChartProps & ChartActions, undefined> {
+export class ChartInner extends React.Component<undefined, ChartState> {
     constructor(props: any) {
         super(props);
     }
 
     render() {
+
+        if (this.state == null) {
+            return <div>Loading...</div>
+        }
+
+
         return (
-            (typeof this.props === "undefined" || this.props === null
-                || typeof this.props.chartData === "undefined" || this.props.chartData === null)
-                ? <div className="Loader">
-                    <div className="LoaderImage">
-                        <span>
-                            <img src={loaderLogo} />
-                            <br />
-                            <span className="Text">Loading</span>
-                        </span>
-                    </div>
-                </div>
-                :
-                <CryptoChart data={this.props.chartData} />
+            //(typeof this.props === "undefined" || this.props === null
+            //    || typeof this.props.chartData === "undefined" || this.props.chartData === null)
+            //    ? <div className="Loader">
+            //        <div className="LoaderImage">
+            //            <span>
+            //                <img src={loaderLogo} />
+            //                <br />
+            //                <span className="Text">Loading</span>
+            //            </span>
+            //        </div>
+            //    </div>
+            //    :
+                <FixedWidthChart data={this.state.data} />
+                //<CryptoChart data={this.props.chartData} />
         );
     }
 
     componentDidMount = () => {
-        this.props.fetchChartDataFromWeb();
+        //this.props.fetchChartDataFromWeb();
+
+            getData().then(data => {
+                this.setState({ data })
+            })
     }
 
     //static getDerivedStateFromProps(nextProps, prevState) {
