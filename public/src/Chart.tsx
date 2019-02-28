@@ -20,42 +20,7 @@ import loaderLogo from '../img/ajax-loader.gif';
 
 //chart
 import { FixedWidthChart } from './CryptoChart';
-
 import { getData } from "./utils/ChartUtils"
-
-////chart
-//interface CryptoChartProps {
-//    data: any;
-//}
-
-//class CryptoChart extends React.Component<CryptoChartProps, undefined> {
-//    constructor(props: any) {
-//        super(props);
-//    }
-
-//    render() {
-//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-//        //TODO : See https://codesandbox.io/s/github/rrag/react-stockcharts-examples2/tree/master/examples/CandleStickChartWithHoverTooltip
-
-//        //good CSV data here when needed : https://www.cryptodatadownload.com/
-//        //good CSV data here when needed : https://www.cryptodatadownload.com/
-//        //good CSV data here when needed : https://www.cryptodatadownload.com/
-//        //good CSV data here when needed : https://www.cryptodatadownload.com/
-
-
-
-//        return <div>
-//            <h1>THE CHART IS LOADED</h1>
-//            <h2>{this.props.data.length}</h2>
-//        </div>
-//    }
-//}
-
-
 
 
 interface ChartProps {
@@ -69,46 +34,36 @@ interface  ChartActions {
 
 
 interface ChartState {
-    data: any;
+    chartData: any;
 }
 
-//export class ChartInner extends React.Component<ChartProps & ChartActions, undefined> {
-export class ChartInner extends React.Component<undefined, ChartState> {
+export class ChartInner extends React.Component<ChartProps & ChartActions, ChartState> {
     constructor(props: any) {
         super(props);
     }
 
     render() {
-
-        if (this.state == null) {
-            return <div>Loading...</div>
-        }
-
-
         return (
-            //(typeof this.props === "undefined" || this.props === null
-            //    || typeof this.props.chartData === "undefined" || this.props.chartData === null)
-            //    ? <div className="Loader">
-            //        <div className="LoaderImage">
-            //            <span>
-            //                <img src={loaderLogo} />
-            //                <br />
-            //                <span className="Text">Loading</span>
-            //            </span>
-            //        </div>
-            //    </div>
-            //    :
-                <FixedWidthChart data={this.state.data} />
-                //<CryptoChart data={this.props.chartData} />
+            (typeof this.state === "undefined" || this.state === null
+                || typeof this.state.chartData === "undefined" || this.state.chartData === null)
+                ? <div className="Loader">
+                    <div className="LoaderImage">
+                        <span>
+                            <img src={loaderLogo} />
+                            <br />
+                            <span className="Text">Loading</span>
+                        </span>
+                    </div>
+                </div>
+                :
+                <div className="chartContainer">
+                    <FixedWidthChart data={this.state.chartData} />
+                </div>
         );
     }
 
     componentDidMount = () => {
-        //this.props.fetchChartDataFromWeb();
-
-            getData().then(data => {
-                this.setState({ data })
-            })
+        this.props.fetchChartDataFromWeb();
     }
 
     //static getDerivedStateFromProps(nextProps, prevState) {
@@ -121,9 +76,16 @@ export class ChartInner extends React.Component<undefined, ChartState> {
 
     //NOTE : This method will be deprecated in near future should use above methods
     componentWillReceiveProps = (nextProps) => {
+        console.log("props data", nextProps.chartData);
         var wasChartLoadingError = nextProps.chartLoadingError;
         if (wasChartLoadingError) {
             alert("Could not load chart data");
+            return;
+        }
+        //NOTE :Dont know why I have to use sta ebyt react-stockcharts doesnt like using the react state
+        //transferred to props at all. Hey ho though
+        if (nextProps.chartData != null) {
+            this.setState({ chartData: nextProps.chartData });
         }
     }
 }

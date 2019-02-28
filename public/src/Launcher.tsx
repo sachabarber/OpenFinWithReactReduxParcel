@@ -81,8 +81,8 @@ class Launcher extends React.Component<undefined, undefined> {
             name: "Charts",
             url: "/chart",
             defaultWidth: 600,
-            defaultHeight: 400,
-            resizable: false,
+            defaultHeight: 500,
+            resizable: true,
             autoShow: true
         });
     }
@@ -91,10 +91,10 @@ class Launcher extends React.Component<undefined, undefined> {
         const win = await fin.Window.create({
             name: "Tiles",
             url: "/tiles",
-            defaultWidth: 500,
-            defaultHeight: 290,
-            height: 290,
-            width:500
+            defaultWidth: 560,
+            defaultHeight: 350,
+            width: 560
+            height: 350,
             resizable: false,
             autoShow: true
         });

@@ -1,15 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import * as d3 from 'd3';
+
 import { format } from "d3-format";
 import { timeFormat } from "d3-time-format";
 
-import { ChartCanvas, Chart } from "react-stockcharts";
+import { ChartCanvas, Chart, ZoomButtons } from "react-stockcharts";
 import {
     BarSeries,
-    AreaSeries,
+    CandlestickSeries,
 } from "react-stockcharts/lib/series";
-import { discontinuousTimeScaleProvider } from "react-stockcharts/lib/scale";
 import { XAxis, YAxis } from "react-stockcharts/lib/axes";
 import {
     CrossHairCursor,
@@ -17,53 +16,48 @@ import {
     MouseCoordinateY,
 } from "react-stockcharts/lib/coordinates";
 
-import { SingleValueTooltip } from "react-stockcharts/lib/tooltip";
+import { discontinuousTimeScaleProvider } from "react-stockcharts/lib/scale";
+import {
+    OHLCTooltip,
+} from "react-stockcharts/lib/tooltip";
 import { fitWidth } from "react-stockcharts/lib/helper";
 import { last } from "react-stockcharts/lib/utils";
 
-
-type ChartType = 'svg' | 'hybrid';
-
-interface AreaChartProps {
+interface CandleStickChartWithZoomPanProps {
     data: any[],
     width: number,
     ratio: number,
 };
 
-//class AreaChart extends React.Component<AreaChartProps, any> {
-//    constructor(props: AreaChartProps) {
-//        super(props);
-//    }
 
-//    render() {
-//        const { data, width, ratio } = this.props;
-//        const type = 'svg';
-//        return (
-//            <ChartCanvas ratio={ratio} width={width} height={400}
-//                margin={{ left: 50, right: 50, top: 10, bottom: 30 }}
-//                seriesName="TEST SERIES"
-//                data={data} type={type} xScale={d3.scaleTime()}
-//                xAccessor={(d: any) => d.date}
-//                xExtents={[new Date(2017, 4, 20), new Date(2017, 4, 30)]}
-//            >
-//                <Chart id={0} yExtents={(d: any) => d.close}>
-//                    <XAxis axisAt="bottom" orient="bottom" ticks={10} />
-//                    <YAxis axisAt="left" orient="left" />
-//                    <AreaSeries
-//                        yAccessor={(d: any) => d.close}
-//                    />
-//                </Chart>
-//            </ChartCanvas>
-//        );
-//    }
-//}
-
-
-class AreaChart extends React.Component<AreaChartProps, any> {
+class CandleStickChartWithZoomPan extends React.Component<CandleStickChartWithZoomPanProps, undefined> {
+    constructor(props) {
+        super(props);
+        this.saveNode = this.saveNode.bind(this);
+        this.resetYDomain = this.resetYDomain.bind(this);
+        this.handleReset = this.handleReset.bind(this);
+    }
+    componentWillMount() {
+        this.setState({
+            suffix: "XXX"
+        });
+    }
+    saveNode(node) {
+        this.node = node;
+    }
+    resetYDomain() {
+        this.node.resetYDomain();
+    }
+    handleReset() {
+        this.setState({
+            suffix: this.state.suffix + 1
+        });
+    }
     render() {
         const { data: initialData, width, ratio } = this.props;
         const type = 'svg';
-
+        const mouseMoveEvent, panEvent, zoomEvent = true;
+        const zoomAnchor, clamp = false;
         const xScaleProvider = discontinuousTimeScaleProvider
             .inputDateAccessor(d => d.date);
         const {
@@ -76,62 +70,85 @@ class AreaChart extends React.Component<AreaChartProps, any> {
         const start = xAccessor(last(data));
         const end = xAccessor(data[Math.max(0, data.length - 150)]);
         const xExtents = [start, end];
+
+        const margin = { left: 70, right: 70, top: 20, bottom: 30 };
+
+        const height = 400;
+
+        const gridHeight = height - margin.top - margin.bottom;
+        const gridWidth = width - margin.left - margin.right;
+
+        const showGrid = true;
+        const yGrid = showGrid ? { innerTickSize: -1 * gridWidth, tickStrokeOpacity: 0.2 } : {};
+        const xGrid = showGrid ? { innerTickSize: -1 * gridHeight, tickStrokeOpacity: 0.2 } : {};
+
         return (
-            <ChartCanvas height={400}
+            <ChartCanvas ref={this.saveNode} height={height}
                 ratio={ratio}
                 width={width}
-                margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
+                margin={{ left: 70, right: 70, top: 10, bottom: 30 }}
+
+                mouseMoveEvent={mouseMoveEvent}
+                panEvent={panEvent}
+                zoomEvent={zoomEvent}
+                clamp={clamp}
+                zoomAnchor={zoomAnchor}
                 type={type}
-                seriesName="MSFT"
+                seriesName={`${this.state.suffix}`}
                 data={data}
                 xScale={xScale}
+                xExtents={xExtents}
                 xAccessor={xAccessor}
                 displayXAccessor={displayXAccessor}
-                xExtents={xExtents}
             >
+
                 <Chart id={1}
                     yExtents={d => [d.high, d.low]}
                 >
-                    <XAxis axisAt="bottom" orient="bottom" />
-                    <YAxis axisAt="right" orient="right" ticks={5} />
+                    <XAxis axisAt="bottom"
+                        orient="bottom"
+                        zoomEnabled={zoomEvent}
+                        {...xGrid} />
+                    <YAxis axisAt="right"
+                        orient="right"
+                        ticks={5}
+                        zoomEnabled={zoomEvent}
+                        {...yGrid}
+                    />
+
+                    <MouseCoordinateY
+                        at="right"
+                        orient="right"
+                        displayFormat={format(".2f")} />
+
+                    <CandlestickSeries />
+                    <OHLCTooltip origin={[-40, 0]} />
+                    <ZoomButtons
+                        onReset={this.handleReset}
+                    />
+                </Chart>
+                <Chart id={2}
+                    yExtents={d => d.volume}
+                    height={150} origin={(w, h) => [0, h - 150]}
+                >
+                    <YAxis
+                        axisAt="left"
+                        orient="left"
+                        ticks={5}
+                        tickFormat={format(".2s")}
+                        zoomEnabled={zoomEvent}
+                    />
 
                     <MouseCoordinateX
                         at="bottom"
                         orient="bottom"
                         displayFormat={timeFormat("%Y-%m-%d")} />
                     <MouseCoordinateY
-                        at="right"
-                        orient="right"
-                        displayFormat={format(".2f")} />
-
-                    <AreaSeries yAccessor={d => d.close} />
-
-                    <SingleValueTooltip
-                        xLabel="Date" /* xLabel is optional, absence will not show the x value */ yLabel="C"
-                        yAccessor={d => d.close}
-                        xDisplayFormat={timeFormat("%Y-%m-%d")} yDisplayFormat={format(".2f")}
-                        /* valueStroke="green" - optional prop */
-                        /* labelStroke="#4682B4" - optional prop */
-                        origin={[-40, 0]} />
-                    <SingleValueTooltip
-                        yLabel="Volume" yAccessor={(d) => d.volume}
-                        origin={[-40, 20]} />
-                </Chart>
-                <Chart id={2}
-                    yExtents={d => d.volume}
-                    height={150} origin={(w, h) => [0, h - 150]}
-                >
-                    <YAxis axisAt="left" orient="left" ticks={5} tickFormat={format(".2s")} />
-
-                    <MouseCoordinateY
                         at="left"
                         orient="left"
                         displayFormat={format(".4s")} />
 
-                    <BarSeries yAccessor={d => d.volume}
-                        stroke fill={(d) => d.close > d.open ? "#6BA583" : "#FF0000"}
-                        opacity={0.4}
-                        widthRatio={1} />
+                    <BarSeries yAccessor={d => d.volume} fill={(d) => d.close > d.open ? "#6BA583" : "#FF0000"} />
                 </Chart>
                 <CrossHairCursor />
             </ChartCanvas>
@@ -139,4 +156,4 @@ class AreaChart extends React.Component<AreaChartProps, any> {
     }
 }
 
-export const FixedWidthChart: any = fitWidth(AreaChart);
+export const FixedWidthChart: any = fitWidth(CandleStickChartWithZoomPan);

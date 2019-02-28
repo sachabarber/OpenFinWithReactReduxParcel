@@ -18,7 +18,7 @@ Please follow the instruction below to build/run this code
 ## TODO
 1. Blotter should show alert for bad fetch, same as tiles
 1. Finish of the graph
-1. TSV files for graph
+1. TSV files for graph, route will be my github repo
 1. Graph window using query string for the pair, and listen for bus message from other windows. Both of which should modidy the State { pair }
 1. Bus for graph from blotter/tile, which should set the pair
 1. layout service to support persisting/restore windows, and also restore the state for chart
