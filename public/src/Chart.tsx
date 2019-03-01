@@ -63,7 +63,11 @@ export class ChartInner extends React.Component<ChartProps & ChartActions, Chart
     }
 
     componentDidMount = () => {
-        this.props.fetchChartDataFromWeb();
+
+        const searchParams = new URLSearchParams(location.search);
+        var pair = searchParams.get('pair') || 'USDGBP'
+        console.log("Query string pair", pair);
+        this.props.fetchChartDataFromWeb(pair);
     }
 
     //static getDerivedStateFromProps(nextProps, prevState) {

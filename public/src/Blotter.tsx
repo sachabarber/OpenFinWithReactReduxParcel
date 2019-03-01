@@ -27,6 +27,7 @@ import loaderLogo from '../img/ajax-loader.gif';
 
 interface BlotterProps {
     blotterInfos: BlotterInfo[];
+    blotterLoadingError: Boolean
 }
 
 interface BlotterActions {
@@ -147,6 +148,33 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
         this.initInterApp();
     }
 
+    //static getDerivedStateFromProps(nextProps, prevState) {
+    //    if (nextProps.blotterInfos !== prevState.blotterInfos) {
+    //        return { someState: nextProps.blotterInfos };
+    //    }
+    //    else return null;
+    //}
+
+    //componentDidUpdate(prevProps, prevState) {
+    //    if (prevProps.blotterInfos !== this.props.blotterInfos) {
+    //        //Perform some operation here
+    //        this.setState({
+    //            ...this.state,
+    //            blotterInfos: this.props.blotterInfos
+    //        })
+
+    //    }
+    //}
+
+
+    //NOTE : This method will be deprecated in near future should use above methods
+    componentWillReceiveProps = (nextProps) => {
+        var wasBlotterLoadingError = nextProps.blotterLoadingError;
+        if (wasBlotterLoadingError) {
+            alert("Could not load blotter");
+        }
+    }
+
     checkRowIsSelected = (rowInfo) => {
         var result = false;
         if (typeof rowInfo !== "undefined" && typeof this.state !== "undefined" && this.state != null) {
@@ -189,6 +217,7 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
 export const Blotter = connect<BlotterProps, BlotterActions, RootState>(
     state => ({
         blotterInfos: state.blotter.blotterInfos,
+        blotterLoadingError: state.blotter.blotterLoadingError
     }),
     {
         fetchBlotterFromEndpoint: fetchBlotterFromEndpoint,

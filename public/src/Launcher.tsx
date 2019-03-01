@@ -79,9 +79,11 @@ class Launcher extends React.Component<undefined, undefined> {
     handleChartClick = async (e) => {
         const win = await fin.Window.create({
             name: "Charts",
-            url: "/chart",
+            url: "/chart?pair=USDEUR",
             defaultWidth: 600,
             defaultHeight: 500,
+            width: 600
+            height:350,
             resizable: true,
             autoShow: true
         });
