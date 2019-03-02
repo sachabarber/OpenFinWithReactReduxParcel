@@ -20,9 +20,9 @@ function fetchChartData(pair) {
     console.log("fetchChartData redux pair used", pair);
 
     //return fetch("https://cdn.rawgit.com/rrag/react-stockcharts/master/docs/data/MSFT.tsv")
-    return fetch("https://github.com/sachabarber/OpenFinWithReactReduxParcel/blob/master/public/data/Coinbase_BTCUSD_d.tsv")
+    return fetch("https://github.com/sachabarber/OpenFinWithReactReduxParcel/blob/master/public/data/Coinbase_BTCUSD_d.csv")
         .then(response => response.text())
-        .then(data => tsvParse(data, parseData(parseDate)));
+        .then(data => csvParse(data, parseData(parseDate)));
 }
 
 export function fetchChartDataFromWeb(pair) {
