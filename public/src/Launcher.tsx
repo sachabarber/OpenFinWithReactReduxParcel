@@ -67,7 +67,7 @@ class Launcher extends React.Component<undefined, undefined> {
     }
 
     handleTableClick = async (e) => {
-        const win = await fin.Window.create({
+        await fin.Window.create({
             name: "Blotter",
             url: "/blotter",
             defaultWidth: 800,
@@ -78,22 +78,11 @@ class Launcher extends React.Component<undefined, undefined> {
     }
 
     handleChartClick = async (e) => {
-        //const win = await fin.Window.create({
-        //    name: "Charts",
-        //    url: "/chart?pair=BTCEUR",
-        //    defaultWidth: 600,
-        //    defaultHeight: 500,
-        //    width: 600
-        //    height:350,
-        //    resizable: true,
-        //    autoShow: true
-        //});
-
-        const win = await showChartWindow('BTCEUR');
+        await showChartWindow('BTCEUR');
     }
 
     handleTilesClick = async (e) => {
-        const win = await fin.Window.create({
+        await fin.Window.create({
             name: "Tiles",
             url: "/tiles",
             defaultWidth: 560,

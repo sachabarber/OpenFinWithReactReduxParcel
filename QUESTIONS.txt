@@ -1,1 +1,0 @@
-﻿1. Tooltip on img Title="xxxx" how to do this in react

@@ -14,6 +14,7 @@ import HoverImage from "react-hover-image"
 import { Tile } from './Tile';
 import { BlotterInfo } from './common/commonModels';
 import { formatTo2Places } from './common/commonFunctions';
+import { showChartWindow } from "./utils/ChartUtils"
 
 //Redux
 import { Provider } from 'react-redux'
@@ -142,7 +143,6 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
     }
 
 
-
     componentDidMount = () => {
         this.props.fetchBlotterFromEndpoint();
         this.initInterApp();
@@ -184,11 +184,10 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
         return result;
     }
 
-    handleRowClick = (rowInfo, instance, fromwhere) => {
+    handleRowClick = async (rowInfo, instance, fromwhere) => {
+        console.log(rowInfo);
         if (typeof rowInfo !== "undefined") {
-            console.log('rowInfo=', rowInfo);
-            console.log('instance=', instance);
-            alert(rowInfo.row.pair);
+            await showChartWindow(rowInfo.row.pair);
         }
     }
 
@@ -196,12 +195,7 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
         return false;
     }
 
-    //publishMessage = () => {
-    //    fin.desktop.InterApplicationBus.publish("create-deal-from-tile", {
-    //        pair: this.props.tilePair,
-    //        price: this.state.tilePriceRaw
-    //    });
-    //}
+
 
 
     initInterApp = () => {

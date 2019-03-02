@@ -61,7 +61,7 @@ copyFile('ETHEUR_d.csv');
 copyFile('ETHUSD_d.csv');
 copyFile('LTCEUR_d.csv');
 copyFile('LTCUSD_d.csv');
-copyFile('ZECUSD_d.csv');
+copyFile('XRPUSD_d.csv');
 
 
 
@@ -102,7 +102,7 @@ app.get('/tileInfos', function (req, res) {
             { "tilePair": "ETHUSD", "tilePrice": 134.46 },
             { "tilePair": "LTCEUR", "tilePrice": 51.61 },
             { "tilePair": "LTCUSD", "tilePrice": 44.96 },
-            { "tilePair": "ZECUSD", "tilePrice": 51.09 },
+            { "tilePair": "XRPUSD", "tilePrice": 0.3121 },
         ]
     );
 });
@@ -114,7 +114,6 @@ app.get('/blotterInfos', function (req, res) {
 
 app.get('/csvdata/:pair', function (req, res) {
     var pair = req.params["pair"]
-    console.log('express saw csvdata pair', pair);
     res.sendFile('public/dist/' + pair + '_d.csv', { "root": __dirname });
 });
 

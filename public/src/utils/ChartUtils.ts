@@ -14,7 +14,7 @@ export function parseData(parse) {
     };
 }
 
-export async function showChartWindow(pair) {
+export async function showChartWindow(pairToShowInChart) {
 
     const app = await fin.Application.getCurrent();
     var childWindows = await app.getChildWindows();
@@ -27,16 +27,20 @@ export async function showChartWindow(pair) {
     });
 
     if (foundOpenChildWindow) {
-        alert("found existing window send out on bus");
+        console.log("publishing view-chart-for-pair", pairToShowInChart);
+        fin.desktop.InterApplicationBus.publish("view-chart-for-pair", {
+            pair: pairToShowInChart
+        });
+
     }
     else {
-        return await fin.Window.create({
+        await fin.Window.create({
             name: "Charts",
-            url: "/chart?pair=" + pair,
+            url: "/chart?pair=" + pairToShowInChart,
             defaultWidth: 600,
             defaultHeight: 500,
             width: 600
-        height: 350,
+            height: 350,
             resizable: true,
             autoShow: true
         });

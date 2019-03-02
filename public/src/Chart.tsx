@@ -63,8 +63,19 @@ export class ChartInner extends React.Component<ChartProps & ChartActions, Chart
         );
     }
 
+    initInterApp = () => {
+        self = this;
+
+        fin.desktop.InterApplicationBus.subscribe("*", "view-chart-for-pair",
+            function (message, uuid) {
+                self.setState({ pair: message.pair });
+                self.props.fetchChartDataFromWeb(message.pair);
+            });
+    };
+
     componentDidMount = () => {
 
+        this.initInterApp();
         const searchParams = new URLSearchParams(location.search);
         var reqPair = searchParams.get('pair') || 'BTCEUR'
         console.log("Query string pair", reqPair);
@@ -94,6 +105,8 @@ export class ChartInner extends React.Component<ChartProps & ChartActions, Chart
             this.setState({ chartData: nextProps.chartData });
         }
     }
+
+
 }
 
 export const TheChart = connect<ChartProps, ChartActions, RootState>(
