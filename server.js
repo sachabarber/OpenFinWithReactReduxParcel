@@ -25,7 +25,7 @@ Number.prototype.padLeft = function (base, chr) {
 }
 
 var blotterData = [
-    { "pair": "USDGBP", "price": 0.78, "dateCreated": formatDate(Date.now()), "internalId": createGuid() },
+    { "pair": "BTCUSD", "price": 0.78, "dateCreated": formatDate(Date.now()), "internalId": createGuid() },
     { "pair": "USDEUR", "price": 0.89, "dateCreated": formatDate(Date.now()), "internalId": createGuid() }
 ];
 
