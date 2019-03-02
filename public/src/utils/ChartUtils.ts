@@ -13,4 +13,21 @@ export function parseData(parse) {
         return d;
     };
 }
+
+export async function showChartWindow(pair) {
+
+    return await fin.Window.create({
+        name: "Charts",
+        url: "/chart?pair=" + pair,
+        defaultWidth: 600,
+        defaultHeight: 500,
+        width: 600
+        height: 350,
+        resizable: true,
+        autoShow: true
+    });
+
+}
+
 export const parseDate = timeParse("%Y-%m-%d");
+

@@ -15,6 +15,7 @@ import tilesGrayLogo from '../img/tilesGray.png';
 
 import HoverImage from "react-hover-image"
 
+import { showChartWindow } from "./utils/ChartUtils"
 
 document.addEventListener("DOMContentLoaded", function () {
     init();
@@ -77,16 +78,18 @@ class Launcher extends React.Component<undefined, undefined> {
     }
 
     handleChartClick = async (e) => {
-        const win = await fin.Window.create({
-            name: "Charts",
-            url: "/chart?pair=USDEUR",
-            defaultWidth: 600,
-            defaultHeight: 500,
-            width: 600
-            height:350,
-            resizable: true,
-            autoShow: true
-        });
+        //const win = await fin.Window.create({
+        //    name: "Charts",
+        //    url: "/chart?pair=BTCEUR",
+        //    defaultWidth: 600,
+        //    defaultHeight: 500,
+        //    width: 600
+        //    height:350,
+        //    resizable: true,
+        //    autoShow: true
+        //});
+
+        const win = await showChartWindow('BTCEUR');
     }
 
     handleTilesClick = async (e) => {

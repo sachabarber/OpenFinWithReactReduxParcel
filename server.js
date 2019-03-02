@@ -19,21 +19,30 @@ function formatTo2Places(theNum) {
     return parseFloat(result.toString(10)).toFixed(2);
 }
 
+function copyFile(filename) {
+
+    fs.copyFile('public/data/' + filename, 'public/dist/' + filename, (err) => {
+        if (err) throw err;
+    });
+}
+
 Number.prototype.padLeft = function (base, chr) {
     var len = (String(base || 10).length - String(this).length) + 1;
     return len > 0 ? new Array(len).join(chr || '0') + this : this;
 }
 
 var blotterData = [
-    { "pair": "BTCUSD", "price": 0.78, "dateCreated": formatDate(Date.now()), "internalId": createGuid() },
-    { "pair": "USDEUR", "price": 0.89, "dateCreated": formatDate(Date.now()), "internalId": createGuid() }
+    { "pair": "BTCEUR", "price": 5646.00 , "dateCreated": formatDate(Date.now()), "internalId": createGuid() },
+    { "pair": "BTCGBP", "price": 5046.54, "dateCreated": formatDate(Date.now()), "internalId": createGuid() }
 ];
 
 var express = require('express')
     , http = require('http')
     , path = require('path')
     , openfinLauncher = require('openfin-launcher')
-    , bodyParser = require("body-parser");
+    , bodyParser = require("body-parser")
+    , fs = require('fs');
+
 
 
 var app = express();
@@ -43,6 +52,20 @@ app.use(bodyParser.json());
 
 app.set('title','Express Parcel app');
 app.use(express.static(path.join(__dirname, 'public/dist')));
+
+
+copyFile('BTCEUR_d.csv');
+copyFile('BTCGBP_d.csv');
+copyFile('BTCUSD_d.csv');
+copyFile('ETHEUR_d.csv');
+copyFile('ETHUSD_d.csv');
+copyFile('LTCEUR_d.csv');
+copyFile('LTCUSD_d.csv');
+copyFile('ZECUSD_d.csv');
+
+
+
+
 
 /* serves main page  */
 app.get('/', function (req, res) {
@@ -72,20 +95,27 @@ app.get('/tiles', function (req, res) {
 app.get('/tileInfos', function (req, res) {
     res.send(
         [
-            { "tilePair": "USDGBP", "tilePrice": 0.78 },
-            { "tilePair": "USDEUR", "tilePrice": 0.89 },
-            { "tilePair": "USDCAN", "tilePrice": 1.32 },
-            { "tilePair": "USDCHF", "tilePrice": 1.01 },
-            { "tilePair": "GBPCAN", "tilePrice": 1.71 },
-            { "tilePair": "GBPAUD", "tilePrice": 1.81 },
-            { "tilePair": "GBPEUR", "tilePrice": 1.14 },
-            { "tilePair": "GBPPLN", "tilePrice": 4.95 },
+            { "tilePair": "BTCEUR", "tilePrice": 5646.00 },
+            { "tilePair": "BTCGBP", "tilePrice": 5046.54 },
+            { "tilePair": "BTCUSD", "tilePrice": 3799.92 },
+            { "tilePair": "ETHEUR", "tilePrice": 195.3 },
+            { "tilePair": "ETHUSD", "tilePrice": 134.46 },
+            { "tilePair": "LTCEUR", "tilePrice": 51.61 },
+            { "tilePair": "LTCUSD", "tilePrice": 44.96 },
+            { "tilePair": "ZECUSD", "tilePrice": 51.09 },
         ]
     );
 });
 
 app.get('/blotterInfos', function (req, res) {
     res.send(blotterData);
+});
+
+
+app.get('/csvdata/:pair', function (req, res) {
+    var pair = req.params["pair"]
+    console.log('express saw csvdata pair', pair);
+    res.sendFile('public/dist/' + pair + '_d.csv', { "root": __dirname });
 });
 
 

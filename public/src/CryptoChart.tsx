@@ -27,6 +27,7 @@ interface CandleStickChartWithZoomPanProps {
     data: any[],
     width: number,
     ratio: number,
+    pair: string
 };
 
 
@@ -83,75 +84,76 @@ class CandleStickChartWithZoomPan extends React.Component<CandleStickChartWithZo
         const xGrid = showGrid ? { innerTickSize: -1 * gridHeight, tickStrokeOpacity: 0.2 } : {};
 
         return (
-            <ChartCanvas ref={this.saveNode} height={height}
-                ratio={ratio}
-                width={width}
-                margin={{ left: 70, right: 70, top: 10, bottom: 30 }}
+            <div>
+                <h1>{this.props.pair}</h1>
 
-                mouseMoveEvent={mouseMoveEvent}
-                panEvent={panEvent}
-                zoomEvent={zoomEvent}
-                clamp={clamp}
-                zoomAnchor={zoomAnchor}
-                type={type}
-                seriesName={`${this.state.suffix}`}
-                data={data}
-                xScale={xScale}
-                xExtents={xExtents}
-                xAccessor={xAccessor}
-                displayXAccessor={displayXAccessor}
-            >
+                <ChartCanvas ref={this.saveNode} height={height}
+                    ratio={ratio}
+                    width={width}
+                    margin={{ left: 70, right: 70, top: 10, bottom: 30 }}
 
-                <Chart id={1}
-                    yExtents={d => [d.high, d.low]}
+                    mouseMoveEvent={mouseMoveEvent}
+                    panEvent={panEvent}
+                    zoomEvent={zoomEvent}
+                    clamp={clamp}
+                    zoomAnchor={zoomAnchor}
+                    type={type}
+                    seriesName={`${this.state.suffix}`}
+                    data={data}
+                    xScale={xScale}
+                    xExtents={xExtents}
+                    xAccessor={xAccessor}
+                    displayXAccessor={displayXAccessor}
                 >
-                    <XAxis axisAt="bottom"
-                        orient="bottom"
-                        zoomEnabled={zoomEvent}
-                        {...xGrid} />
-                    <YAxis axisAt="right"
-                        orient="right"
-                        ticks={5}
-                        zoomEnabled={zoomEvent}
-                        {...yGrid}
-                    />
 
-                    <MouseCoordinateY
-                        at="right"
-                        orient="right"
-                        displayFormat={format(".2f")} />
+                    <Chart id={1} yExtents={d => [d.high, d.low]}>
+                        <XAxis axisAt="bottom"
+                            orient="bottom"
+                            zoomEnabled={zoomEvent}
+                            {...xGrid} />
+                        <YAxis axisAt="right"
+                            orient="right"
+                            ticks={5}
+                            zoomEnabled={zoomEvent}
+                            {...yGrid}
+                        />
 
-                    <CandlestickSeries />
-                    <OHLCTooltip origin={[-40, 0]} />
-                    <ZoomButtons
-                        onReset={this.handleReset}
-                    />
-                </Chart>
-                <Chart id={2}
-                    yExtents={d => d.volume}
-                    height={150} origin={(w, h) => [0, h - 150]}
-                >
-                    <YAxis
-                        axisAt="left"
-                        orient="left"
-                        ticks={5}
-                        tickFormat={format(".2s")}
-                        zoomEnabled={zoomEvent}
-                    />
+                        <MouseCoordinateY
+                            at="right"
+                            orient="right"
+                            displayFormat={format(".2f")} />
 
-                    <MouseCoordinateX
-                        at="bottom"
-                        orient="bottom"
-                        displayFormat={timeFormat("%Y-%m-%d")} />
-                    <MouseCoordinateY
-                        at="left"
-                        orient="left"
-                        displayFormat={format(".4s")} />
+                        <CandlestickSeries />
+                        <OHLCTooltip origin={[-40, 0]} />
+                        <ZoomButtons
+                            onReset={this.handleReset}
+                        />
+                    </Chart>
+                    <Chart id={2}
+                        yExtents={d => d.volume}
+                        height={150} origin={(w, h) => [0, h - 150]}>
+                        <YAxis
+                            axisAt="left"
+                            orient="left"
+                            ticks={5}
+                            tickFormat={format(".2s")}
+                            zoomEnabled={zoomEvent}
+                        />
 
-                    <BarSeries yAccessor={d => d.volume} fill={(d) => d.close > d.open ? "#6BA583" : "#FF0000"} />
-                </Chart>
-                <CrossHairCursor />
-            </ChartCanvas>
+                        <MouseCoordinateX
+                            at="bottom"
+                            orient="bottom"
+                            displayFormat={timeFormat("%Y-%m-%d")} />
+                        <MouseCoordinateY
+                            at="left"
+                            orient="left"
+                            displayFormat={format(".4s")} />
+
+                        <BarSeries yAccessor={d => d.volume} fill={(d) => d.close > d.open ? "#6BA583" : "#FF0000"} />
+                    </Chart>
+                    <CrossHairCursor />
+                </ChartCanvas>
+            </div>
         );
     }
 }

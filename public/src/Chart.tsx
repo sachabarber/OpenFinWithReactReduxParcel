@@ -35,6 +35,7 @@ interface  ChartActions {
 
 interface ChartState {
     chartData: any;
+    pair: string;
 }
 
 export class ChartInner extends React.Component<ChartProps & ChartActions, ChartState> {
@@ -57,7 +58,7 @@ export class ChartInner extends React.Component<ChartProps & ChartActions, Chart
                 </div>
                 :
                 <div className="chartContainer">
-                    <FixedWidthChart data={this.state.chartData} />
+                    <FixedWidthChart data={this.state.chartData} pair={this.state.pair} />
                 </div>
         );
     }
@@ -65,9 +66,10 @@ export class ChartInner extends React.Component<ChartProps & ChartActions, Chart
     componentDidMount = () => {
 
         const searchParams = new URLSearchParams(location.search);
-        var pair = searchParams.get('pair') || 'USDGBP'
-        console.log("Query string pair", pair);
-        this.props.fetchChartDataFromWeb(pair);
+        var reqPair = searchParams.get('pair') || 'BTCEUR'
+        console.log("Query string pair", reqPair);
+        this.setState({ pair:reqPair });
+        this.props.fetchChartDataFromWeb(reqPair);
     }
 
     //static getDerivedStateFromProps(nextProps, prevState) {
