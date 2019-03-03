@@ -76,6 +76,9 @@ export class Tile extends React.Component<TileProps, TileState> {
                                 src={tickGrayLogo}
                                 hoverSrc={tickColoredLogo}
                                 onClick={this.handleTilePlaceTradeClick} />
+                        </span>
+                        &nbsp;&nbsp;
+                        <span>
                             <HoverImage className="tileImages2"
                                 src={chart16GrayLogo}
                                 hoverSrc={chart16ColoredLogo}

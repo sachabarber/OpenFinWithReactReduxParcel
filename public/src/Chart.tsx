@@ -68,8 +68,11 @@ export class ChartInner extends React.Component<ChartProps & ChartActions, Chart
 
         fin.desktop.InterApplicationBus.subscribe("*", "view-chart-for-pair",
             function (message, uuid) {
-                self.setState({ pair: message.pair });
-                self.props.fetchChartDataFromWeb(message.pair);
+                //self.setState({ pair: message.pair });
+                //self.props.fetchChartDataFromWeb(message.pair);
+
+                window.location.assign("/chart?pair=" + message.pair);
+                document.title = window.location.hostname + ':' + window.location.port + "/chart?pair=" + message.pair;
             });
     };
 

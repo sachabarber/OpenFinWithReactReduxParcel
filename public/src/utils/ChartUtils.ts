@@ -19,12 +19,13 @@ export async function showChartWindow(pairToShowInChart) {
     const app = await fin.Application.getCurrent();
     var childWindows = await app.getChildWindows();
     var foundOpenChildWindow = false;
-    childWindows.map(async (win, index) => {
-        if (win.identity.name === "Charts") {
+    for (var i = 0; i < childWindows.length; i++) {
+        var info = await childWindows[i].getInfo();
+        if (info.url.includes("chart")) {
             foundOpenChildWindow = true;
-            return;
+            break;
         }
-    });
+    }
 
     if (foundOpenChildWindow) {
         console.log("publishing view-chart-for-pair", pairToShowInChart);

@@ -32,7 +32,8 @@ export class PersistedWindowInfo {
         public defaultHeight: number,
         public left:number,
         public top: number,
-        public resizable: boolean) {
+        public resizable: boolean,
+        public isChildWindow: boolean) {
 
     }
 }

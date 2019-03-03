@@ -13,8 +13,3 @@ Please follow the instruction below to build/run this code
 ## 2. To run
 - navigate to root folder with server.js in it
 - **npm run express-server** then navigate to http://localhost:1234 OR **node server** then navigate to http://localhost:1234
-
-
-## TODO
-1. Bus for graph from tile, which should set the pair, and show correct chart
-1. layout service to support persisting/restore windows, and also restore the state for chart

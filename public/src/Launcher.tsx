@@ -42,17 +42,11 @@ async function initWithOpenFin() {
 
     const app = await fin.Application.getCurrent();
     const mainWindow = await app.getWindow();
+    console.log("mainWindow",mainWindow);
 
-    //var bounds = await mainWindow.getBounds();
-    //var info = await mainWindow.getInfo();
-    //var options = await mainWindow.getOptions();
+    await LayoutService.getInstance().hydrateWindows(mainWindow);
 
-    //console.log("launcer bounds", bounds);
-    //console.log("launcer info", info);
-    //console.log("launcer options", options);
-
-
-    interval(10000).subscribe(async x => {
+    interval(1000).subscribe(async x => {
         await LayoutService.getInstance().persistWindows(mainWindow);
     });
 }
@@ -88,14 +82,7 @@ class Launcher extends React.Component<undefined, undefined> {
     }
 
     handleTableClick = async (e) => {
-        await fin.Window.create({
-            name: "Blotter",
-            url: "/blotter",
-            defaultWidth: 800,
-            defaultHeight: 200,
-            resizable: true,
-            autoShow: true
-        });
+        await LayoutService.getInstance().showChildWindow("Blotter", '/blotter', 800, 200, true);
     }
 
     handleChartClick = async (e) => {
@@ -103,16 +90,7 @@ class Launcher extends React.Component<undefined, undefined> {
     }
 
     handleTilesClick = async (e) => {
-        await fin.Window.create({
-            name: "Tiles",
-            url: "/tiles",
-            defaultWidth: 560,
-            defaultHeight: 350,
-            width: 560
-            height: 350,
-            resizable: false,
-            autoShow: true
-        });
+        await LayoutService.getInstance().showChildWindow("Tiles", '/tiles', 560, 350, false);
     }
 }
 
