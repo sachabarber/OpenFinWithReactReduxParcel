@@ -19,3 +19,22 @@ export class BlotterInfo {
 
     }
 }
+
+
+export class PersistedWindowInfo {
+
+    constructor(
+        public name: string,
+        public url: string,
+        public width: number,
+        public height: number,
+        public defaultWidth: number,
+        public defaultHeight: number,
+        public left:number,
+        public top: number,
+        public resizable: boolean) {
+
+    }
+}
+
+

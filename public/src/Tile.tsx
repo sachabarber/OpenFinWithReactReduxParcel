@@ -9,6 +9,8 @@ import '../scss/index.scss';
 //images
 import tickGrayLogo from '../img/tickGray.png';
 import tickColoredLogo from '../img/tickColored.png';
+import chart16GrayLogo from '../img/chart16Gray.png';
+import chart16ColoredLogo from '../img/chart16Colored.png';
 import blackTriangleUpLogo from '../img/BlackTriangleUp.png';
 import greenTriangleUpLogo from '../img/GreenTriangleUp.png';
 import blackTriangleDownLogo from '../img/BlackTriangleDown.png';
@@ -19,6 +21,7 @@ import { Button } from 'react-bootstrap';
 import HoverImage from "react-hover-image"
 import { TileInfo } from './common/commonModels';
 import { formatTo2Places } from './common/commonFunctions';
+import { showChartWindow } from "./utils/ChartUtils"
 
 interface TileProps {
     tilePair: string;
@@ -73,6 +76,10 @@ export class Tile extends React.Component<TileProps, TileState> {
                                 src={tickGrayLogo}
                                 hoverSrc={tickColoredLogo}
                                 onClick={this.handleTilePlaceTradeClick} />
+                            <HoverImage className="tileImages2"
+                                src={chart16GrayLogo}
+                                hoverSrc={chart16ColoredLogo}
+                                onClick={this.handleChartClick} />
                         </span>
                     </div>
                 </div>
@@ -89,6 +96,10 @@ export class Tile extends React.Component<TileProps, TileState> {
 
     handleTilePlaceTradeClick = async (e) => {
         this.publishMessage();
+    }
+
+    handleChartClick = async (e) => {
+        await showChartWindow(this.props.tilePair);
     }
 
     publishMessage = () => {
