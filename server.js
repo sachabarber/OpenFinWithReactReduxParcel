@@ -123,8 +123,8 @@ app.get('/csvdata/:pair', function (req, res) {
 var port = process.env.PORT || 1234;
 
 
-//const configPath = path.join(__dirname, 'public', 'app.json');
-const configPath = path.join(__dirname, 'public','app.json');
+const configPath = path.join(__dirname, 'public', 'app.json');
+
 
 const localServer = http.createServer(app).listen(port, function(){
     console.log('Express server listening on port ' + port);
