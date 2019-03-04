@@ -1,10 +1,58 @@
-<div id="TOC">/<div>
+
+<head>
+<style type="text/css">
+.auto-style1 {
+	background-color: #FFFF00;
+}
+</style>
+</head>
+
+<div id="TOC"><div>
 <h1>Overview</h1>
-<h2>What does the final product look like?</h2>
-	<p>I think th best way to see what the final product looks like is via this 
-	small video</p>
+<p>So it has been a very long time since I wrote an article here at codeproject. 
+I have been quite busy on my blog actually, so have been doing more there of 
+late. Thing is I kind of heard about this technology years ago, and kind of knew 
+what it did, but had never really used it. </p>
+	<p>That technology is called <a href="https://openfin.co/">OpenFin</a>, whos 
+	strap line is &quot;OpenFin OS modernizes financial desktops, enabling instant 
+	distribution, strong security and application interoperability&quot;.</p>
+	<p>It just so happens that I am in the business of writing trading apps, its 
+	kind of what I do. Those that know me know that I used to use WPF a lot. 
+	Those days seem ages ago now. I don't really touch anything UI related at 
+	all. Crist I was doing Scala and Akka for about 1.5 years, no no UI stuff 
+	there at all, and my new job is deep server side/cloud.</p>
+	<p>That said I do enjoy a bit of UI work, so could not quite resist, looking 
+	at <a href="https://openfin.co/">OpenFin</a>, even though it is 
+	probably considered pretty old tech by some by now.</p>
+	<p>Before I started I did a quick search here at codeproject, and could not 
+	believe someone has not written about it before to be honest. So I thought 
+	Ok I need to do this then.</p>
+	<p>So this article will be about <a href="https://openfin.co/">OpenFin</a>, 
+	and also showing the good parts of it, and the not so good parts of it. We 
+	will also see a demo app written to use OpenFin, and learn more about what
+	<a href="https://openfin.co/">OpenFin</a> is.</p>
+	<p>So in nutshell this article will be about looking at
+	<a href="https://openfin.co/">OpenFin</a> and walking through a demo app</p>
 	<p>&nbsp;</p>
-<h2>What tools will we use along the way</h2>
+	<h1>What does the final product look like?</h1>
+	<p>I think the best way to see what the final product looks like is via this 
+	small video</p>
+	<p>
+	<a href="https://github.com/sachabarber/OpenFinWithReactReduxParcel/blob/master/codeproject-article/Recording%20#4.mp4">
+	<img alt="" class="auto-style1" height="214" src="VideoSmall.png" width="450"></a></p>
+	<p><i>CLICK TO DOWNLOAD VIDEO</i></p>
+	<p>Essentially what I have built is a demo app that is like a VERY VERY 
+	cutdown trading app, it has the following features</p>
+	<ul>
+		<li>Blotter for seeing past trades (in grid form)</li>
+		<li>Tiles with FAKE ticking data</li>
+		<li>Charts for the tiles, or for the past deals. </li>
+	</ul>
+	<p>Although there are only 3 windows involved this give us enough meat to 
+	really try oiuut Openfin</p>
+	<p>&nbsp;</p>
+	
+<h1>What tools will we use along the way</h1>
 	<p>This is a fairly chunky demo app, and if you do follow along right to the 
 	end you can expect to have seen, or could see in the source code the 
 	following technologies in use:</p>
@@ -18,15 +66,93 @@
 		<li>Parcel JS</li>
 		<li>OpenFin</li>
 	</ul>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-<h2>Where is the code?</h2>
+	<h1>Where is the code?</h1>
 <p>The code for this article is actually hosted at Github :<a href="https://github.com/sachabarber/OpenFinWithReactReduxParcel"> 
 https://github.com/sachabarber/OpenFinWithReactReduxParcel</a></p>
  
  
-<h1>What problem is Openfin trying to solve</h1>
+<h1>What exactly is Openfin, and what problem is it trying to solve?</h1>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>Isn't this Electron?</h2>
+	<p>That was exactly the question I came up with, and I asked this of my 
+	friend and all round genius and codeproject gold Colin Eberhardt, and this 
+	is what he said:</p>
+	<p><em><br>One thing to note is that OpenFin is a pretty thin layer on top 
+	of Electron, so from a technology perspective they are quite similar.<br>
+	<br>The APIs and features that OpenFin offers are pretty limited and don't 
+	add that much value. They tend to focus their sales message on a couple of 
+	things:<br><br>Security, Electron is not secure by default, it adds Node 
+	APIs directly to the renderer threading. As a result an XSS attack can cause 
+	havoc! However, they have done a lot of work to create a robust opt-in 
+	security model (this issue tracks a lot of those changes&nbsp;<a href="https://github.com/electron/electron/issues/6712">https://github.com/electron/electron/issues/6712</a>). 
+	OpenFin have an electron fork that is secure by default, you have no access 
+	at all to Node APIs. However, if you don't host third party content in your 
+	app, XSS is unlikely, and Electron can be used quite safely.<br><br>(Check 
+	out this video of Chuck, the OpenFin CTO, spreading fear and confusion about 
+	security!&nbsp;<a href="https://www.youtube.com/watch?v=jhY4kdY_0Ho">https://www.youtube.com/watch?v=jhY4kdY_0Ho</a>)<br>
+	<br>Distribution, the OpenFin distribution model involves installing their 
+	runtime once, with apps downloaded from the internet via a manifest file. 
+	With Electron you bundle the entire runtime with each app. The OpenFin model 
+	makes life easier in regulated environments where installation of desktop 
+	apps is painful.</em><br></p>
+	<p>&nbsp;</p>
 <h2>What are are the important parts of OpenFin?</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<p>&nbsp;</p>
  
 <h1>A Demo Application</h1>
-
+	<p>This section will walk through the demo app in some detail.</p>
+	<h2>Bundler</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<h2>Express Server Side code</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<h2>Openfin Manifest File</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<h2>Launcher</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<h2>Tiles</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<h2>Blotter</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<h2>Chart</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<h2>Persisting State</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<p class="auto-style1">Scaling issues with the Layouts.api</p>
+	<h2>&nbsp;</h2>
+	<h2>Debugging</h2>
+	<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<h2>&nbsp;</h2>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<h1>Conclusion</h1>
+	<p>I do think
+	<a href="https://openfin.co/">OpenFin</a> is cool, and there are some cool 
+	apps written in Electron/OpenFin, and I really like the way they are trying 
+	to bring back desktop type applications (which traders actually do like 
+	contrary to what everyones says, its just useful to be able to tab/undock, 
+	pin, move things around on to a different monitor).</p>
+	<p>That said the issue that I mentioned above with the OpenFin-Layouts api 
+	and how that works with Windows (even Windows 10) Scaling, makes it 
+	completely unusable to run across different monitor/different resolutions. 
+	So that means this rather appealing service, can't be used unless you know 
+	exactly what hardware you are going to run stuff on and it has a scaling of 
+	EXACTLY 100%.</p>
+	<p>So that aspect sucked badly</p>
+	<p>The good parts were I found the APIs very easy to work with, and found 
+	that I could still run my react/redux and Typescript with ease.</p>
+	<p>So it was perhaps 75% good 25% bad for me overall.</p>
+	<p>I will let you lot make your own conclusions</p>
+	<p>&nbsp;</p>
+	<p><strong>If you did like the article votes here or stars at the repo are 
+	always welcome.</strong></p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
