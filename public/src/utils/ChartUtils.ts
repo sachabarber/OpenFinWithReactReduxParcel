@@ -42,7 +42,7 @@ export async function showChartWindow(pairToShowInChart) {
             defaultHeight: 500,
             width: 600
             height: 350,
-            resizable: true,
+            resizable: false,
             autoShow: true
         });
     }
