@@ -4,6 +4,9 @@
 .auto-style1 {
 background-color: #FFFF00;
 }
+.auto-style2 {
+	border-width: 0px;
+}
 </style>
 </head>
 
@@ -38,7 +41,7 @@ will also see a demo app written to use OpenFin, and learn more about what
 <p>I think the best way to see what the final product looks like is via this 
 small video</p>
 <p>
-<a href="https://github.com/sachabarber/OpenFinWithReactReduxParcel/blob/master/codeproject-article/Recording%20#4.mp4">
+<a href="https://github.com/sachabarber/OpenFinWithReactReduxParcel/blob/master/codeproject-article/Recording%20%234.mp4">
 <img alt="" class="auto-style1" height="214" src="VideoSmall.png" width="450"></a></p>
 <p><i>CLICK TO DOWNLOAD VIDEO</i></p>
 <p>Essentially what I have built is a demo app that is like a VERY VERY 
@@ -202,17 +205,274 @@ video again you will see all this in action&nbsp;</p>
 	</ul>
 	<p>&nbsp;</p>
 	<h2>Bundler</h2>
-<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
+	<p>So far we have established the demo app will be a HTML5 project. Now no 
+	self respecting HTML5 project these days would be without a bundler. Webpack 
+	is the defacto gold standard winning this holy war right now, and I used to 
+	revel in the glory of crafting a WebPack config file such as this</p>
+<pre lang="jscript">
+let _ = require('lodash');
+let webpack = require('webpack');
+let path = require('path');
+let fs = require("fs");
+let WebpackOnBuildPlugin = require('on-build-webpack');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
+let HtmlWebpackPlugin = require('html-webpack-plugin');
+
+let babelOptions = {
+    "presets": ["es2015", "react"]
+};
+
+function isVendor(module) {
+    return module.context &amp;&amp; module.context.indexOf('node_modules') !== -1;
+}
+
+let entries = {
+    index: './src/index.tsx',
+    indexCss: './scss/index.scss'
+
+};
+
+//build it to the Play Framework public folder, which is services by the assets controller
+let buildDir = path.resolve(__dirname, '../public/dist');
+
+module.exports = {
+
+    context: __dirname,
+
+    entry: entries,
+
+    output: {
+        filename: '[name].bundle.[hash].js',
+        path: buildDir,
+		//this is to make it play nice with the Play Framework Assets controllers
+		//that deals with static data
+		publicPath: '/assets/dist'
+    },
+
+    // these break for node 5.3+ when building WS stuff
+    node: {
+        fs: 'empty'
+    },
+
+    watch: true,
+
+    devServer: {
+        open: true, // to open the local server in browser
+        contentBase: __dirname,
+    },
+
+    // Enable sourcemaps for debugging webpack's output.
+    devtool: "source-map",
+
+    resolve: {
+        extensions: [".tsx", ".ts", ".js", ".jsx"],
+        modules: [path.resolve(__dirname, "src"), "node_modules"]
+    },
+
+    plugins: [
+
+        //The ProvidePlugin makes a module available as a variable in every other
+        //module required by webpack
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
+
+        // creates a common vendor js file for libraries in node_modules
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor'],
+            minChunks: function (module, count) {
+                return isVendor(module);
+            }
+        }),
+
+        // creates a common vendor js file for libraries in node_modules
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "commons",
+            chunks: _.keys(entries),
+            minChunks: function (module, count) {
+                return !isVendor(module) &amp;&amp; count > 1;
+            }
+        }),
+
+
+        //will unlink unused files on a build
+        //http://stackoverflow.com/questions/40370749/how-to-remove-old-files-from-the-build-dir-when-webpack-watch
+        new WebpackOnBuildPlugin(function (stats) {
+            const newlyCreatedAssets = stats.compilation.assets;
+
+            const unlinked = [];
+            fs.readdir(path.resolve(buildDir), (err, files) => {
+                files.forEach(file => {
+                    if (file != "fonts") {
+                        if (!newlyCreatedAssets[file]) {
+                            fs.unlink(path.resolve(buildDir + '\\' + file));
+                            unlinked.push(file);
+                        }
+                    }
+                });
+                if (unlinked.length > 0) {
+                    console.log('Removed old assets: ', unlinked);
+                }
+            })
+        }),
+
+        //scss/sass files extracted to common css bundle
+        new ExtractTextPlugin({
+            filename: '[name].bundle.[hash].css',
+            allChunks: true,
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'template.html',
+        })
+    ],
+
+    module: {
+        rules: [
+            // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader' 1st 
+            // then 'babel-loader'
+            // NOTE : loaders run right to left (think of them as a cmd line pipe)
+            {
+                test: /\.ts(x?)$/,
+                exclude: /node_modules/,
+                use: [
+                  {
+                      loader: 'babel-loader',
+                      options: babelOptions
+                  },
+                  {
+                      loader: 'awesome-typescript-loader'
+                  }
+                ]
+            },
+
+
+            // All files with a .css extenson will be handled by 'css-loader'
+            {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract(['css-loader?importLoaders=1']),
+            },
+
+            // All files with a .scss|.sass extenson will be handled by 'sass-loader'
+            {
+                test: /\.(sass|scss)$/,
+                loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
+            },
+
+
+            // All files with a '.js' extension will be handled by 'babel-loader'.
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: [
+                  {
+                      loader: 'babel-loader',
+                      options: babelOptions
+                  }
+                ]
+            },
+
+            { 
+                test: /\.png$/, 
+                loader: "url-loader?limit=100000" 
+            },
+      
+            { 
+                test: /\.jpg$/, 
+                loader: "file-loader" 
+            },
+
+            {
+                test: /\.woff(\?.*)?$/,
+                loader: 'url-loader?prefix=fonts/&amp;name=fonts/[name].[ext]&amp;limit=10000&amp;mimetype=application/font-woff'
+            },
+
+            {
+                test: /\.woff2(\?.*)?$/,
+                loader: 'url-loader?prefix=fonts/&amp;name=fonts/[name].[ext]&amp;limit=10000&amp;mimetype=application/font-woff2'
+            },
+
+            {
+                test: /\.ttf(\?.*)?$/,
+                loader: 'url-loader?prefix=fonts/&amp;name=fonts/[name].[ext]&amp;limit=10000&amp;mimetype=application/octet-stream'
+            },
+
+            {
+                test: /\.eot(\?.*)?$/, loader: 'file-loader?prefix=fonts/&amp;name=fonts/[name].[ext]'
+            },
+
+            {
+                test: /\.svg(\?.*)?$/,
+                loader: 'url-loader?prefix=fonts/&amp;name=fonts/[name].[ext]&amp;limit=10000&amp;mimetype=image/svg+xml'
+            },
+
+            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                loader: "source-map-loader"
+            }
+        ]
+    }
+};	</pre>
+<p>Where this config would give me the following features</p>
+	<ul>
+		<li>Babel transpiling to JS</li>
+		<li>TypeScript transpiling to JS</li>
+		<li>SCSS transpiling to CSS</li>
+		<li>I could use entry points to correct grok the dependency graphs</li>
+		<li>I could use SourceMaps</li>
+		<li>I could use images that would be encoded to base64 strings if below 
+		a certain size</li>
+		<li>I could use a HTML template that works with my sitributable hashed 
+		assets</li>
+	</ul>
+	<p>Great all cool stuff indeed.....Then a much cleverer webdev collegue of 
+	mine showed me <a href="https://parceljs.org/">https://parceljs.org/</a>, 
+	which requires this much effort to achieve the same thing as above</p>
+	<p><img alt="" height="36" src="parcel.png" width="100"></p>
+	<p>Can you see all the effort in that white square. That's right there is 
+	NONE. None at all, no config. This is what I get produced for NO effort at 
+	all</p>
+	<p><img alt="" height="1626" src="parcel2.png" width="629"></p>
+	<p>See how I get hashed JS files (even though the demo app uses TypeScript), 
+	multiple entry points one per file (so thats one dependency graph per etry 
+	point), I get CSS (even though the demo app used SCSS), oh and I also get 
+	source maps</p>
+	<p><a href="Parcel3Big.png">
+	<img alt="" class="auto-style2" height="369" src="Parcel3Small.png" width="630"></a></p>
+	<p><em>CLICK FOR LARGER IMAGE</em></p>
+	<p>&nbsp;</p>
+	<p>Don't believe me, well here is the demo app running where I have debugged 
+	into it, and you can see we do indeed get the source maps sent to the 
+	browser (for PROD there is another procedure
+	<a href="https://parceljs.org/production.html">
+	https://parceljs.org/production.html</a>)</p>
+	<p>&nbsp;</p>
+	<p>All of this is pretty amazing for a simple command line like this <code>
+	parcel launcher.html blotter.html chart.html tiles.html </code></p>
 <p>&nbsp;</p>
-<h2>Express Server Side code</h2>
+	<h2>Express Server Side code</h2>
 	<p> <a href="https://openfin.co/">OpenFin</a> may be a container but its not 
 	magical, for any HTML content, there MUST be something that is responsible 
-	for serving this data. For the demo app, this is done using Node and 
+	for serving this data. While we are on this subject <a href="https://openfin.co/">OpenFin</a> 
+	does also create desktop shortcuts and menu icons, but these are just 
+	shortcuts to the <code>app.json</code> manifest file. If you don't have the 
+	actual backend that serves the app running the <a href="https://openfin.co/">OpenFin</a> 
+	shortcuts won't work at all.</p>
+	<p> &nbsp;</p>
+	<p> For the demo app, this is done using Node and 
 	Express. The role of Express in this demo app is fairly important, as it is 
 	where the <a href="https://openfin.co/">OpenFin</a> boostrapping occurs 
 	where it reads the mainfest file, and also where it provides the various 
 	roots to serve the demo application as a whole. In this Express code you 
 	will find all the routes possible for the demo application.</p>
+	<p> Ideally I would link this all back to a proper backend store, but for 
+	this demo app, I am using the Express server code as an in memory 
+	repository.</p>
 <pre lang="jscript">
 function formatDate(date) {
     var d = new Date(date);
@@ -382,9 +642,166 @@ is the one for the demo app</p>
 }
 </pre>
 <p>&nbsp;</p>
-	<h2>Launcher</h2>
-<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
-<p>&nbsp;</p>
+<h2>Launcher</h2>
+	<p>The Launcher is the main window for the demo app, and it is the one 
+	served up by the Express backend for a GET <a href="http://localhost:1234">
+	http://localhost:1234</a> , and it looks like this</p>
+	<p><img alt="" height="165" src="Launcher.png" width="630"></p>
+	<p>This is also one of the Parcel.JS entry points. You can kind of think of 
+	every single window as a individual standalone app, and as such it will 
+	require its own entry point with Parcel.js, and should have a HTML page. A 
+	Window in <a href="https://openfin.co/">OpenFin</a> lingo equates to a new 
+	HTML page. Which for Parcel means new entry point/new dependency graph.</p>
+	<p>As such this is pretty typical setup for a entry point 
+	(Tiles/Blotter/Graph all follow this pattern)</p>
+	<h3><strong>The Html</strong></h3>
+<pre lang="xml">
+&lt;html&gt;
+
+&lt;head&gt;
+	
+&lt;/head&gt;
+&lt;body id="launcher"&gt;
+  &lt;div id="root"&gt;&lt;/div&gt;
+  &lt;script src="src/LauncherEntry.tsx"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+	<p>See how this references the <code>src/LauncherEntry.tsx</code></p>
+	<h3>The TypeScript</h3>
+	<p>Where the <code>src/LauncherEntry.tsx</code> looks like this</p>
+<pre lang="xml">
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { LauncherComponent } from './Launcher';
+
+if (window['module'] &amp;&amp; window['module'].hot) {
+  window['module'].hot.dispose(function() {});
+
+  window['module'].hot.accept(function() {
+      ReactDOM.render(&lt;LauncherComponent /&gt;, document.getElementById('root'));
+  });
+}
+
+ReactDOM.render(&lt;LauncherComponent /&gt;, document.getElementById('root'));
+
+</pre>
+	<p>Where this in turns uses hot module loading when it mounts the <code>React 
+	LauncherComponent</code> which is the view for the <code>Launcher</code> window, which looks like this</p>
+<pre lang="xml">
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { interval } from 'rxjs';
+
+//scss
+import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap';
+import '../scss/index.scss';
+
+//images
+import chartColoredLogo from '../img/chartColored.png';
+import chartGrayLogo from '../img/chartGray.png';
+import tableColoredLogo from '../img/tableColored.png';
+import tableGrayLogo from '../img/tableGray.png';
+import tilesColoredLogo from '../img/tilesColored.png';
+import tilesGrayLogo from '../img/tilesGray.png';
+import HoverImage from "react-hover-image"
+
+//components
+import { showChartWindow } from "./utils/ChartUtils"
+import { LayoutService } from "./utils/LayoutUtils"
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    init();
+});
+
+
+function init() {
+    console.log("Dom Loaded ", this);
+
+    try {
+        fin.desktop.main(function () {
+            initWithOpenFin();
+        })
+    } catch (err) {
+        initNoOpenFin();
+    }
+};
+
+async function initWithOpenFin() {
+
+    const app = await fin.Application.getCurrent();
+    const mainWindow = await app.getWindow();
+    console.log("mainWindow",mainWindow);
+
+    await LayoutService.getInstance().hydrateWindows(mainWindow);
+
+    interval(1000).subscribe(async x =&gt; {
+        await LayoutService.getInstance().persistWindows(mainWindow);
+    });
+}
+
+function initNoOpenFin() {
+    alert("OpenFin is not available - you are probably running in a browser.");
+}
+
+
+class Launcher extends React.Component&lt;undefined, undefined&gt; {
+    constructor(props: any) {
+        super(props);
+    }
+
+    render() {
+        return (
+            &lt;div id="launcherDiv"&gt;
+                
+                &lt;HoverImage className="launcherImages"
+                    src={tableGrayLogo}
+                    hoverSrc={tableColoredLogo}
+                    onClick={this.handleTableClick} /&gt;
+                &lt;HoverImage className="launcherImages"
+                    src={chartGrayLogo}
+                    hoverSrc={chartColoredLogo}
+                    onClick={this.handleChartClick} /&gt;
+                &lt;HoverImage className="launcherImages"
+                    src={tilesGrayLogo}
+                    hoverSrc={tilesColoredLogo}
+                    onClick={this.handleTilesClick} /&gt;
+            &lt;/div&gt;
+        );
+    }
+
+    handleTableClick = async (e) =&gt; {
+        await LayoutService.getInstance().showChildWindow("Blotter", '/blotter', 800, 200, true);
+    }
+
+    handleChartClick = async (e) =&gt; {
+        await showChartWindow('BTCEUR');
+    }
+
+    handleTilesClick = async (e) =&gt; {
+        await LayoutService.getInstance().showChildWindow("Tiles", '/tiles', 560, 350, false);
+    }
+}
+
+
+
+export const LauncherComponent = () =&gt; (
+    &lt;Launcher/&gt;
+);
+
+</pre>
+	<p>This is all pretty standard <code>React</code> stuff here, nice that JS 
+	has finally come of age and uses stuff like Lambdas (arrow functions to the 
+	JS crowd) and <code>async</code>-<code>await </code>YAY</p>
+	<p>One special callout in the code above is see how we check for the 
+	presence of <a href="https://openfin.co/">OpenFin</a> in the <code>Init()</code> 
+	method. This is pretty much the standard way of detecting if you are in <a href="https://openfin.co/">OpenFin</a> 
+	mode or attempting to run this app in a browser (where it probably wont work 
+	as it was designed to be an <a href="https://openfin.co/">OpenFin</a> app 
+	after all)</p>
+	<p>&nbsp;</p>
 <h2>Tiles</h2>
 <p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
 <p>&nbsp;</p>
@@ -399,8 +816,17 @@ is the one for the demo app</p>
 <p class="auto-style1">Scaling issues with the Layouts.api</p>
 <p>&nbsp;</p>
 <h2>Debugging</h2>
-<p class="auto-style1">XXXXXXXXXXXXXXXXXX</p>
-<p>&nbsp;</p>
+	<p>Now as a developer you will at some point want to debug your code, so you 
+	will likely want to know how to do that. For <a href="https://openfin.co/">OpenFin</a> 
+	the easiest way to do this is to allow the context menu in your app which 
+	you can set in the <a href="https://openfin.co/">OpenFin</a> manifest file
+	<code>app.json</code> that we saw above. You basically set this line <code>
+	&quot;contextMenu&quot;: true</code></p>
+	<p>With that turned on you can see a menu and just launch the chrome debug 
+	tools:</p>
+	<p><img alt="" height="171" src="debugging.png" width="630"></p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
 <h1>Conclusion</h1>
 <p>I do think
 <a href="https://openfin.co/">OpenFin</a> is cool, and there are some cool 
