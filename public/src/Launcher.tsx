@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { interval } from 'rxjs';
+
 
 //scss
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -40,9 +40,6 @@ function init() {
 
 async function initWithOpenFin() {
     await LayoutService.getInstance().hydrateWindows();
-    interval(1000).subscribe(async x => {
-        await LayoutService.getInstance().persistWindows();
-    });
 }
 
 function initNoOpenFin() {

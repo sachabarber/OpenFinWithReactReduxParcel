@@ -38,9 +38,9 @@ export async function showChartWindow(pairToShowInChart) {
         await fin.Window.create({
             name: "Charts",
             url: "/chart?pair=" + pairToShowInChart,
-            defaultWidth: 600,
+            defaultWidth: 640,
             defaultHeight: 500,
-            width: 600
+            width: 640
             height: 350,
             resizable: false,
             autoShow: true
