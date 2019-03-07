@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ReactTable from "react-table";
+import * as Layouts from "openfin-layouts"
 
 
 //scss
@@ -11,10 +12,12 @@ import 'react-table/react-table.css'
 //components
 import { Button } from 'react-bootstrap';
 import HoverImage from "react-hover-image"
-import { Tile } from './Tile';
 import { BlotterInfo } from './common/commonModels';
-import { formatTo2Places } from './common/commonFunctions';
 import { showChartWindow } from "./utils/ChartUtils"
+import dockGrayLogo from '../img/dock16Gray.png';
+import dockWhiteLogo from '../img/dock16White.png';
+import dockAllGrayLogo from '../img/dock16AllGray.png';
+import dockAllWhiteLogo from '../img/dock16AllWhite.png';
 
 //Redux
 import { Provider } from 'react-redux'
@@ -22,6 +25,7 @@ import { store } from './redux/store';
 import { RootState } from './redux/root';
 import { connect } from 'react-redux';
 import { fetchBlotterFromEndpoint } from './redux/blotter';
+
 
 //images
 import loaderLogo from '../img/ajax-loader.gif';
@@ -37,11 +41,6 @@ interface BlotterActions {
 
 interface BlotterState {
     selectedRow: number;
-}
-
-Number.prototype.padLeft = function (base, chr) {
-    var len = (String(base || 10).length - String(this).length) + 1;
-    return len > 0 ? new Array(len).join(chr || '0') + this : this;
 }
 
 class BlotterInner extends React.Component<BlotterProps & BlotterActions, BlotterState> {
@@ -106,39 +105,57 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
                     </div>
                 </div>
                 :
-                <ReactTable
-                    data={this.props.blotterInfos}
-                    columns={columns}
-                    getTrProps={(state, rowInfo, column, instance) => {
-                        if (typeof rowInfo !== "undefined") {
-                            return {
-                                onClick: (e, handleOriginal) => {
-                                    this.setState({
-                                        ...this.state,
-                                        selectedRow: rowInfo.index
-                                    })
-                                    this.handleRowClick(rowInfo, instance,"if")
-                                },
-                                style: {
-                                    background: this.checkRowIsSelected(rowInfo) ? 'cornflowerblue' : '#2c2c2c',
-                                    color: this.checkRowIsSelected(rowInfo) ? 'black' : 'white'
-                                },
-                            }
-                        }
-                        else {
-                            return {
-                                onClick: (e, handleOriginal) => {
-                                    this.handleRowClick(rowInfo, instance, "else")
-                                },
-                                style: {
-                                    background: '#2c2c2c',
-                                    color: 'white'
-                                },
-                            }
-                        }
-                    }}
+                <div>
 
-                />
+                    <div>
+                        <span>
+                        <HoverImage className="unDockButton"
+                            src={dockGrayLogo}
+                            hoverSrc={dockWhiteLogo}
+                            onClick={this.handleUndockClick} />
+                        </span>
+                        &nbsp;&nbsp;
+                        <span>
+                        <HoverImage className="unDockallButton"
+                            src={dockAllGrayLogo}
+                            hoverSrc={dockAllWhiteLogo}
+                            onClick={this.handleUndockAllClick} />
+                        </span>
+                    </div>
+                    <ReactTable
+                        data={this.props.blotterInfos}
+                        columns={columns}
+                        getTrProps={(state, rowInfo, column, instance) => {
+                            if (typeof rowInfo !== "undefined") {
+                                return {
+                                    onClick: (e, handleOriginal) => {
+                                        this.setState({
+                                            ...this.state,
+                                            selectedRow: rowInfo.index
+                                        })
+                                        this.handleRowClick(rowInfo, instance,"if")
+                                    },
+                                    style: {
+                                        background: this.checkRowIsSelected(rowInfo) ? 'cornflowerblue' : '#2c2c2c',
+                                        color: this.checkRowIsSelected(rowInfo) ? 'black' : 'white'
+                                    },
+                                }
+                            }
+                            else {
+                                return {
+                                    onClick: (e, handleOriginal) => {
+                                        this.handleRowClick(rowInfo, instance, "else")
+                                    },
+                                    style: {
+                                        background: '#2c2c2c',
+                                        color: 'white'
+                                    },
+                                }
+                            }
+                        }}
+
+                    />
+                </div>
         );
     }
 
@@ -195,7 +212,13 @@ class BlotterInner extends React.Component<BlotterProps & BlotterActions, Blotte
         return false;
     }
 
+    handleUndockClick = () => {
+        Layouts.snapAndDock.undockWindow();
+    }
 
+    handleUndockAllClick = () => {
+        Layouts.snapAndDock.undockGroup();
+    }
 
 
     initInterApp = () => {

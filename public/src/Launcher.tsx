@@ -39,15 +39,9 @@ function init() {
 };
 
 async function initWithOpenFin() {
-
-    const app = await fin.Application.getCurrent();
-    const mainWindow = await app.getWindow();
-    console.log("mainWindow",mainWindow);
-
-    await LayoutService.getInstance().hydrateWindows(mainWindow);
-
+    await LayoutService.getInstance().hydrateWindows();
     interval(1000).subscribe(async x => {
-        await LayoutService.getInstance().persistWindows(mainWindow);
+        await LayoutService.getInstance().persistWindows();
     });
 }
 
@@ -82,7 +76,7 @@ class Launcher extends React.Component<undefined, undefined> {
     }
 
     handleTableClick = async (e) => {
-        await LayoutService.getInstance().showChildWindow("Blotter", '/blotter', 800, 200, true);
+        await LayoutService.getInstance().showChildWindow("Blotter", '/blotter', 800, 200);
     }
 
     handleChartClick = async (e) => {
@@ -90,7 +84,7 @@ class Launcher extends React.Component<undefined, undefined> {
     }
 
     handleTilesClick = async (e) => {
-        await LayoutService.getInstance().showChildWindow("Tiles", '/tiles', 560, 350, false);
+        await LayoutService.getInstance().showChildWindow("Tiles", '/tiles', 560, 350);
     }
 }
 

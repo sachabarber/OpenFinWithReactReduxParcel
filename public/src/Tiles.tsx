@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import * as Layouts from "openfin-layouts"
 
 //scss
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -10,6 +11,10 @@ import { Button } from 'react-bootstrap';
 import HoverImage from "react-hover-image"
 import { Tile } from './Tile';
 import { TileInfo } from './common/commonModels';
+import dockGrayLogo from '../img/dock16Gray.png';
+import dockWhiteLogo from '../img/dock16White.png';
+import dockAllGrayLogo from '../img/dock16AllGray.png';
+import dockAllWhiteLogo from '../img/dock16AllWhite.png';
 
 //Redux
 import { Provider } from 'react-redux'
@@ -50,12 +55,30 @@ class TilesInner extends React.Component<TilesProps & TilesActions, TilesState> 
                         </span>
                     </div>
                   </div>
-                : <div id="tileContainer">
-                    <ul id="listOfTiles">
-                        {
-                            this.props.tileInfos.map(d => <Tile tilePair={d.tilePair} tilePrice={d.tilePrice} />)
-                        }
-                    </ul>
+                : 
+                <div>
+                    <div>
+                        <span>
+                        <HoverImage className="unDockButton"
+                            src={dockGrayLogo}
+                            hoverSrc={dockWhiteLogo}
+                            onClick={this.handleUndockClick} />
+                        </span>
+                        &nbsp;&nbsp;
+                        <span>
+                        <HoverImage className="unDockallButton"
+                            src={dockAllGrayLogo}
+                            hoverSrc={dockAllWhiteLogo}
+                            onClick={this.handleUndockAllClick} />
+                        </span>
+                    </div>
+                    <div id="tileContainer">
+                        <ul id="listOfTiles">
+                            {
+                                this.props.tileInfos.map(d => <Tile tilePair={d.tilePair} tilePrice={d.tilePrice} />)
+                            }
+                        </ul>
+                    </div>
                 </div>
         );
     }
@@ -89,6 +112,14 @@ class TilesInner extends React.Component<TilesProps & TilesActions, TilesState> 
         if (wasTileLoadingError) {
             alert("Could not load tiles");
         }
+    }
+
+    handleUndockClick = () => {
+        Layouts.snapAndDock.undockWindow();
+    }
+
+    handleUndockAllClick = () => {
+        Layouts.snapAndDock.undockGroup();
     }
 }
 

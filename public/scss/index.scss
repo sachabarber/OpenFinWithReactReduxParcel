@@ -29,3 +29,16 @@ input[type='text'] {
 .Text {
     color: $standard-accent-text-color;
 }
+
+.unDockButton {
+    position: absolute;
+    top:10px;
+    left: 10px;
+}
+
+.unDockallButton {
+    position: absolute;
+    top:10px;
+    left: 36px;
+}
+

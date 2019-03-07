@@ -1,12 +1,18 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-
+import * as Layouts from "openfin-layouts"
 
 //scss
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../scss/index.scss';
 import 'react-table/react-table.css'
 
+//components
+import dockGrayLogo from '../img/dock16Gray.png';
+import dockWhiteLogo from '../img/dock16White.png';
+import dockAllGrayLogo from '../img/dock16AllGray.png';
+import dockAllWhiteLogo from '../img/dock16AllWhite.png';
+import HoverImage from "react-hover-image"
 
 //Redux
 import { Provider } from 'react-redux'
@@ -57,8 +63,25 @@ export class ChartInner extends React.Component<ChartProps & ChartActions, Chart
                     </div>
                 </div>
                 :
-                <div className="chartContainer">
-                    <FixedWidthChart data={this.state.chartData} pair={this.state.pair} />
+                <div>
+                    <div>
+                        <span>
+                        <HoverImage className="unDockButton"
+                            src={dockGrayLogo}
+                            hoverSrc={dockWhiteLogo}
+                            onClick={this.handleUndockClick} />
+                        </span>
+                        &nbsp;&nbsp;
+                        <span>
+                        <HoverImage className="unDockallButton"
+                            src={dockAllGrayLogo}
+                            hoverSrc={dockAllWhiteLogo}
+                            onClick={this.handleUndockAllClick} />
+                        </span>
+                    </div>
+                    <div className="chartContainer">
+                        <FixedWidthChart data={this.state.chartData} pair={this.state.pair} />
+                    </div>
                 </div>
         );
     }
@@ -106,6 +129,13 @@ export class ChartInner extends React.Component<ChartProps & ChartActions, Chart
         }
     }
 
+    handleUndockClick = () => {
+        Layouts.snapAndDock.undockWindow();
+    }
+
+    handleUndockAllClick = () => {
+        Layouts.snapAndDock.undockGroup();
+    }
 
 }
 
